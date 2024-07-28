@@ -47,7 +47,7 @@ export default function CameraScreen() {
     });
     console.log(photo);
     updateImage(photo)
-    router.push('/questions')
+    router.push('/location-question')
   };
   return (
     <CameraView

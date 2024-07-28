@@ -11,8 +11,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
+    const [loaded] = useFonts({
     Inter: require('../assets/fonts/Inter.ttf'),
   });
 

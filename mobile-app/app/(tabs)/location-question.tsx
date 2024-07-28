@@ -2,30 +2,21 @@
 import {
   Image,
   StyleSheet,
-  Platform,
   View,
-  Text,
   Dimensions,
-  Button,
-  ImageBackground,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
 import { router } from "expo-router";
-import CameraButton from "@/components/buttons/CameraButton";
 import { skinCancerFacts } from "@/constants/Quotes";
+
+import { MultiChoice } from "@/components/MultiChoice";
 
 import { useImage } from "@/hooks/usePhotoContext";
 
-const questions = [
-  {
-    title: 'What part of the body is this?',
-    options: [
-
-    ]
-  }
-]
+import CloseButton from "@/components/buttons/CloseButton";
+import NextButton from "@/components/buttons/NextButton";
 
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
@@ -66,23 +57,43 @@ export default function HomeScreen() {
       </View>
       <View>
         <View style={styles.questions}>
-          <ThemedText type='defaultSemiBold'>
-            <ThemedText type='highlight'>
-              Questions
-            </ThemedText>
+          <ThemedText type="defaultSemiBold">
+            <ThemedText type="highlight">Questions</ThemedText>
           </ThemedText>
-          <ThemedText type='subtitle'>
-            What part of the body is this?
-          </ThemedText>
+          <MultiChoice
+            title="What part of the body is this?"
+            options={[
+              { name: "lower extremity (leg, hip, thigh, etc.)" },
+              { name: "anterior torso (front chest, stomach, etc.)" },
+              { name: "posterior torso (back, shoulders, etc.)" },
+              { name: "head/neck" },
+              { name: "upper extremity (arm, wrist, hand, etc.)" },
+            ]}
+          />
+          <View style={styles.ButtonView}>
+            <CloseButton
+              onPress={() => {
+                router.push("/");
+              }}
+            />
+            <NextButton
+              onPress={() => {
+                router.push("/");
+              }}
+            />
+          </View>
         </View>
-        <Image source={{ uri: image && image.uri }} style={{
+        <Image
+          source={{ uri: image && image.uri }}
+          style={{
             width: 155,
             height: 155,
             borderColor: "#084887",
             borderRadius: 15,
             borderWidth: 2,
-            marginLeft: 'auto'
-          }}/>
+            marginLeft: "auto",
+          }}
+        />
       </View>
     </View>
   );
@@ -110,7 +121,6 @@ const styles = StyleSheet.create({
     margin: 40,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
   },
   dividerBar: {
     marginVertical: 9,
@@ -127,7 +137,14 @@ const styles = StyleSheet.create({
   },
   questions: {
     display: "flex",
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 9,
+    marginTop: 24,
+  },
+  ButtonView: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 24,
   }
 });
