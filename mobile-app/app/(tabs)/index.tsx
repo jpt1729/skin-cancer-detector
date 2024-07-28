@@ -10,8 +10,10 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 
-import CameraIcon from "@/components/icons/CameraIcon";
+import { router } from "expo-router";
+import CameraButton from "@/components/buttons/CameraButton";
 import { skinCancerFacts } from "@/constants/Quotes";
+
 
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
@@ -20,12 +22,24 @@ export default function HomeScreen() {
   const skinCancerFact = skinCancerFacts[
     Math.floor(Math.random() * skinCancerFacts.length)
   ]
+
+  const currentHour = new Date().getHours();
+  let greeting;
+  
+  if (currentHour < 12) {
+    greeting = "morning!";
+  } else if (currentHour < 18) {
+    greeting = "afternoon!";
+  } else {
+    greeting = "night!";
+  }
+
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
         <View>
           <ThemedText type="title">
-            Good <ThemedText type="highlight">morning!</ThemedText>
+            Good <ThemedText type="highlight">{greeting}</ThemedText>
           </ThemedText>
           <View style={styles.dividerBar} />
         </View>
@@ -40,7 +54,9 @@ export default function HomeScreen() {
       </View>
       <View style={styles.bottom}>
         <View>
-          <CameraIcon />
+          <CameraButton onPress = {() => {
+            router.push('/camera')
+          }}/>
         </View>
         <ThemedText type="subtext">Detect skin cancer</ThemedText>
       </View>
@@ -74,7 +90,7 @@ const styles = StyleSheet.create({
   },
   dividerBar: {
     marginVertical: 9,
-    backgroundColor: "#F9AB55",
+    backgroundColor: "#F58A07",
     borderRadius: 9999,
     width: 120,
     height: 5,

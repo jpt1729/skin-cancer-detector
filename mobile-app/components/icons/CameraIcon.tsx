@@ -4,7 +4,7 @@ const CameraIcon = (props: SvgProps) => (
   <Svg
     width={24}
     height={24}
-    fill="#000000"
+    fill="#F7F5FB"
     viewBox="0 -960 960 960"
     {...props}
   >
