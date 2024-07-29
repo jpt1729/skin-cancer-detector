@@ -9,7 +9,9 @@ import { useQuestions } from "@/hooks/useQuestionsContext";
 import { useImage } from "@/hooks/usePhotoContext";
 import CloseButton from "@/components/buttons/CloseButton";
 
-export default function HomeScreen() {
+import { uploadImage, test } from "@/scripts/file-upload";
+
+export default function AnalyzeScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
@@ -28,43 +30,7 @@ export default function HomeScreen() {
   const { answers } = useQuestions();
   const { image } = useImage();
 
-  function convertImageToBase64(imageUri) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        fetch(imageUri)
-            .then(response => response.blob())
-            .then(blob => {
-                reader.readAsDataURL(blob);
-                reader.onloadend = () => {
-                    const base64String = reader.result.split(',')[1];
-                    resolve(base64String);
-                };
-                reader.onerror = error => reject(error);
-            });
-    });
-}
-  async function sendImageData() {
-    const imageUri = image.uri;
-    const base64Image = await convertImageToBase64(imageUri);
-
-    const data = {
-      image: base64Image,
-      answers: answers,
-    };
-
-    fetch("http://localhost:5328/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.error("Error:", error));
-  }
-
-  sendImageData();
+  
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -107,8 +73,8 @@ export default function HomeScreen() {
             Sending photos to our server!
           </ThemedText>
           <CloseButton
-            onPress={() => {
-              router.push("/");
+            onPress={async () => {
+              await test(image.uri)
             }}
           />
         </View>
