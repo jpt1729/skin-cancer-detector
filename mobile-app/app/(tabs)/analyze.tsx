@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { StyleSheet, View, Dimensions, Image } from "react-native";
-
+import { MotiView } from "moti";
 import { ThemedText } from "@/components/ThemedText";
 
 import { router } from "expo-router";
@@ -29,8 +29,8 @@ export default function AnalyzeScreen() {
   }
   const { answers, setAnswers } = useQuestions();
   const { image } = useImage();
-
-  
+  uploadImage(image.uri, answers);
+  // TODO: Error handling
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -60,12 +60,18 @@ export default function AnalyzeScreen() {
               height: 16,
             }}
           >
-            <View
+            <MotiView
               style={{
                 borderRadius: 9999,
-                width: "30%",
                 height: 8,
+                width: 100,
                 backgroundColor: "#084887",
+              }}
+              from={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                type: "timing",
+                duration: 350,
               }}
             />
           </View>
@@ -74,8 +80,8 @@ export default function AnalyzeScreen() {
           </ThemedText>
           <CloseButton
             onPress={async () => {
-              setAnswers({})
-              router.push('/')
+              setAnswers({});
+              router.push("/");
             }}
           />
         </View>

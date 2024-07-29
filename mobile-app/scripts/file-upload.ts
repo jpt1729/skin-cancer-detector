@@ -1,16 +1,16 @@
 import * as FileSystem from "expo-file-system";
 
-export const uploadImage = async (uri: string) => {
+export const uploadImage = async (uri: string, answers: any) => {
   //TODO: UPDATE URL
-  console.log(`running on ${uri}`);
-  await fetch("http://10.0.0.145:5328/binary-upload");
+  const url = new URL ("http://10.0.0.145:5000/multipart-upload")
+  url.search = new URLSearchParams(answers).toString();
   const res = await FileSystem.uploadAsync(
-    "http://10.0.0.145:5328/binary-upload",
+    url.toString(),
     uri,
     {
       httpMethod: "PATCH",
-      uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
-      fieldName: "file",
+      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+      fieldName: "photo",
     }
   );
   console.log(JSON.stringify(res, null, 4));
