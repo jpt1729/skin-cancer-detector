@@ -27,7 +27,44 @@ export default function HomeScreen() {
   }
   const { answers } = useQuestions();
   const { image } = useImage();
-  console.log(answers);
+
+  function convertImageToBase64(imageUri) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        fetch(imageUri)
+            .then(response => response.blob())
+            .then(blob => {
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = error => reject(error);
+            });
+    });
+}
+  async function sendImageData() {
+    const imageUri = image.uri;
+    const base64Image = await convertImageToBase64(imageUri);
+
+    const data = {
+      image: base64Image,
+      answers: answers,
+    };
+
+    fetch("http://localhost:5328/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.error("Error:", error));
+  }
+
+  sendImageData();
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -46,28 +83,34 @@ export default function HomeScreen() {
       <View>
         <View style={styles.middle}>
           <View>
-          <Image
-            source={{ uri: image && image.uri }}
-            style={styles.cameraBox}
-          />
+            <Image
+              source={{ uri: image && image.uri }}
+              style={styles.cameraBox}
+            />
           </View>
           <View
-          style={{
-            width: '100%',
-            height: 16
-          }}
+            style={{
+              width: "100%",
+              height: 16,
+            }}
           >
-            <View style={{
-              borderRadius: 9999,
-              width: '30%',
-              height: 8,
-              backgroundColor: '#084887'
-            }}/>
+            <View
+              style={{
+                borderRadius: 9999,
+                width: "30%",
+                height: 8,
+                backgroundColor: "#084887",
+              }}
+            />
           </View>
-          <ThemedText type='defaultSemiBold' style={{marginTop: -18}}>
+          <ThemedText type="defaultSemiBold" style={{ marginTop: -18 }}>
             Sending photos to our server!
           </ThemedText>
-          <CloseButton onPress={() => {router.push('/')}}/>
+          <CloseButton
+            onPress={() => {
+              router.push("/");
+            }}
+          />
         </View>
       </View>
     </View>
@@ -112,8 +155,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cameraBox: {
-    aspectRatio: '1',
-    width: '100%',
+    aspectRatio: "1",
+    width: "100%",
     borderRadius: 24,
     borderWidth: 4,
     borderColor: "#084887",
