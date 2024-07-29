@@ -1,28 +1,26 @@
 import { View, Button, StyleSheet, TouchableHighlight, Text } from "react-native";
-import NextIcon from "../icons/NextIcon";
+import BackIcon from "../icons/BackIcon";
 
-type NextButtonType = {
-    onPress: Function,
-    disabled: boolean
+type BackButtonType = {
+    onPress: Function
 }
 
-export default function NextButton({ onPress, disabled }: NextButtonType) {
+export default function BackButton({ onPress }: BackButtonType) {
   return (
     <TouchableHighlight onPress={() => {
-      if (!disabled) {
         onPress()
-      }
-    }} style={[styles.nextButton, disabled ? {backgroundColor: "#a6a4a8"} : {backgroundColor:"#084887"}]}>
-      <NextIcon/>
+    }} style={styles.backButton}>
+      <BackIcon/>
     </TouchableHighlight>
   );
 }
 
 const styles = StyleSheet.create({
-    nextButton: {
+    backButton: {
       width: 48,
       height: 48,
       borderRadius: 999,
+      backgroundColor: '#084887',
       display:'flex',
       justifyContent: 'center',
       alignItems: 'center'

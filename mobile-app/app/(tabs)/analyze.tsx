@@ -1,28 +1,23 @@
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  Dimensions,
-  Button,
-} from "react-native";
+// @ts-nocheck
+import { StyleSheet, View, Dimensions, Image } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
 import { router } from "expo-router";
-import CameraButton from "@/components/buttons/CameraButton";
 import { useFact } from "@/hooks/useFact";
+import { useQuestions } from "@/hooks/useQuestionsContext";
+import { useImage } from "@/hooks/usePhotoContext";
+import CloseButton from "@/components/buttons/CloseButton";
 
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
-  const { fact } = useFact()
+  const { fact } = useFact();
 
   const currentHour = new Date().getHours();
   let greeting;
-  
+
   if (currentHour < 12) {
     greeting = "morning!";
   } else if (currentHour < 18) {
@@ -30,7 +25,9 @@ export default function HomeScreen() {
   } else {
     greeting = "night!";
   }
-
+  const { answers } = useQuestions();
+  const { image } = useImage();
+  console.log(answers);
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -42,20 +39,36 @@ export default function HomeScreen() {
         </View>
         <View>
           <ThemedText>
-            <ThemedText type="highlight">Did you know?</ThemedText>{" "}
-            {
-              fact
-            }
+            <ThemedText type="highlight">Did you know?</ThemedText> {fact}
           </ThemedText>
         </View>
       </View>
-      <View style={styles.bottom}>
-        <View>
-          <CameraButton onPress = {() => {
-            router.push('/camera')
-          }}/>
+      <View>
+        <View style={styles.middle}>
+          <View>
+          <Image
+            source={{ uri: image && image.uri }}
+            style={styles.cameraBox}
+          />
+          </View>
+          <View
+          style={{
+            width: '100%',
+            height: 16
+          }}
+          >
+            <View style={{
+              borderRadius: 9999,
+              width: '30%',
+              height: 8,
+              backgroundColor: '#084887'
+            }}/>
+          </View>
+          <ThemedText type='defaultSemiBold' style={{marginTop: -18}}>
+            Sending photos to our server!
+          </ThemedText>
+          <CloseButton onPress={() => {router.push('/')}}/>
         </View>
-        <ThemedText type="subtext">Detect skin cancer</ThemedText>
       </View>
     </View>
   );
@@ -83,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 40,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
+    gap: 24,
   },
   dividerBar: {
     marginVertical: 9,
@@ -93,6 +106,19 @@ const styles = StyleSheet.create({
     height: 5,
   },
   bottom: {
+    display: "flex",
+    gap: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cameraBox: {
+    aspectRatio: '1',
+    width: '100%',
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: "#084887",
+  },
+  middle: {
     display: "flex",
     gap: 12,
     justifyContent: "center",

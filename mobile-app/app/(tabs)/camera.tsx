@@ -47,7 +47,7 @@ export default function CameraScreen() {
     });
     console.log(photo);
     updateImage(photo)
-    router.push('/location-question')
+    router.push('/questions')
   };
   return (
     <CameraView
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   cameraBox: {
     height: 300,
     width: 300,
-    borderRadius: 40,
+    borderRadius: 24,
     borderWidth: 2,
     borderColor: "#FFFFFF",
   },

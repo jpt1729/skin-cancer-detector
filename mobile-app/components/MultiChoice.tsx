@@ -1,47 +1,49 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 
 import SelectIcon from "./icons/SelectIcon";
 import SelectedIcon from "./icons/SelectedIcon";
 
 import { ThemedText } from "./ThemedText";
 
+import { useQuestions } from "@/hooks/useQuestionsContext";
+
 export type MultiChoiceProps = {
   title: string;
+  name: string;
   options: {
-    name: string
+    name: string;
+    value: string;
   }[];
 };
 type MultiChoiceItemProps = {
-  selected: boolean,
-  name: string,
-  onPress: () => void,
+  selected: boolean;
+  item: any;
+  onPress: () => void;
 };
-function MultiChoiceItem({ selected, name, onPress }: MultiChoiceItemProps) {
+function MultiChoiceItem({ item, selected, onPress }: MultiChoiceItemProps) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.OptionStyle}>
-      {selected ? <SelectedIcon/> : <SelectIcon/> }
-      <ThemedText type="defaultSemiBold">
-        {name}
-      </ThemedText>
+      {selected ? <SelectedIcon /> : <SelectIcon />}
+      <ThemedText type="defaultSemiBold">{item.name}</ThemedText>
     </TouchableOpacity>
   );
 }
 
-export function MultiChoice({ title, options }: MultiChoiceProps) {
-  const [selected, setSelected] = useState('');
-
-  const renderItem = ({ item }: { item: { name: string } }) => {
-    const itemSelected = item.name === selected;
+export function MultiChoice({ title, name, options }: MultiChoiceProps) {
+  const [selected, setSelected] = useState("");
+  const { answers, setAnswers } = useQuestions();
+  const renderItem = ({ item }: { item: { name: string; value: string } }) => {
+    const itemSelected = item.value === selected;
     return (
       <MultiChoiceItem
-        name={item.name}
-        onPress={() => setSelected(item.name)}
+        item={item}
+        onPress={() => {
+          setSelected(item.value);
+          let newAnswers = {...answers}
+          newAnswers[name] = item.value
+          setAnswers(newAnswers)
+        }}
         selected={itemSelected}
       />
     );
@@ -50,9 +52,9 @@ export function MultiChoice({ title, options }: MultiChoiceProps) {
   return (
     <View style={styles.MultiChoiceView}>
       <ThemedText type="subtitle">{title}</ThemedText>
-      <FlatList 
-        data={options} 
-        renderItem={renderItem} 
+      <FlatList
+        data={options}
+        renderItem={renderItem}
         keyExtractor={(item) => item.name}
       />
     </View>
@@ -66,10 +68,10 @@ const styles = StyleSheet.create({
     gap: 9,
   },
   OptionStyle: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     gap: 4,
-    alignItems: 'center',
-    marginBottom: 12
-  }
+    alignItems: "center",
+    marginBottom: 12,
+  },
 });

@@ -1,10 +1,6 @@
-// @ts-ignore
-import {
-  Image,
-  StyleSheet,
-  View,
-  Dimensions,
-} from "react-native";
+// @ts-nocheck
+import { useState } from "react";
+import { Image, StyleSheet, View, Dimensions } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 
@@ -14,16 +10,20 @@ import { skinCancerFacts } from "@/constants/Quotes";
 import { MultiChoice } from "@/components/MultiChoice";
 
 import { useImage } from "@/hooks/usePhotoContext";
+import { useQuestions } from "@/hooks/useQuestionsContext";
+import { useFact } from "@/hooks/useFact";
 
 import CloseButton from "@/components/buttons/CloseButton";
+import BackButton from "@/components/buttons/BackButton";
 import NextButton from "@/components/buttons/NextButton";
+import FinishButton from "@/components/buttons/FinishButton";
 
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
-  const skinCancerFact =
-    skinCancerFacts[Math.floor(Math.random() * skinCancerFacts.length)];
+  const { fact } = useFact()
+
   const { image } = useImage();
   if (image === null) {
     router.push("/"); // something happened and they need to be sent back
@@ -38,7 +38,11 @@ export default function HomeScreen() {
   } else {
     greeting = "night!";
   }
-
+  const { questions, answers } = useQuestions();
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  if (!questions) {
+    return <View />;
+  }
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -51,7 +55,7 @@ export default function HomeScreen() {
         <View>
           <ThemedText>
             <ThemedText type="highlight">Did you know?</ThemedText>{" "}
-            {skinCancerFact}
+            {fact}
           </ThemedText>
         </View>
       </View>
@@ -61,26 +65,46 @@ export default function HomeScreen() {
             <ThemedText type="highlight">Questions</ThemedText>
           </ThemedText>
           <MultiChoice
-            title="What part of the body is this?"
-            options={[
-              { name: "lower extremity (leg, hip, thigh, etc.)" },
-              { name: "anterior torso (front chest, stomach, etc.)" },
-              { name: "posterior torso (back, shoulders, etc.)" },
-              { name: "head/neck" },
-              { name: "upper extremity (arm, wrist, hand, etc.)" },
-            ]}
+            title={questions["questions"][currentQuestion].title}
+            name={questions["questions"][currentQuestion].name}
+            options={questions["questions"][currentQuestion]["options"]}
           />
           <View style={styles.ButtonView}>
-            <CloseButton
+            {currentQuestion === 0 && (
+              <CloseButton
+                onPress={() => {
+                  setCurrentQuestion(0);
+                  router.push("/");
+                }}
+              />
+            )}
+            {currentQuestion > 0 && (
+              <BackButton
+                onPress={() => {
+                  if (currentQuestion - 1 >= 0) {
+                    setCurrentQuestion(currentQuestion - 1);
+                    return;
+                  }
+                }}
+              />
+            )}
+            {currentQuestion + 1 !== questions["questions"].length && <NextButton
               onPress={() => {
-                router.push("/");
+                if (currentQuestion + 1 < questions["questions"].length) {
+                  setCurrentQuestion(currentQuestion + 1);
+                  return;
+                }
+                // final question code here
               }}
-            />
-            <NextButton
+              disabled={!answers[questions["questions"][currentQuestion]["name"]]}
+            />}
+            {currentQuestion + 1 === questions["questions"].length && <FinishButton
               onPress={() => {
-                router.push("/");
+                setCurrentQuestion(0);
+                router.push("/analyze");
               }}
-            />
+              disabled={!answers[questions["questions"][currentQuestion]["name"]]}
+            />}
           </View>
         </View>
         <Image
@@ -121,6 +145,7 @@ const styles = StyleSheet.create({
     margin: 40,
     display: "flex",
     flexDirection: "column",
+    gap: 24
   },
   dividerBar: {
     marginVertical: 9,
@@ -139,12 +164,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 9,
-    marginTop: 24,
   },
   ButtonView: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 24,
-  }
+  },
 });

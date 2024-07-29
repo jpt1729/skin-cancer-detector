@@ -1,25 +1,25 @@
-import { View, Button, StyleSheet, TouchableHighlight, Text } from "react-native";
-import NextIcon from "../icons/NextIcon";
+import { StyleSheet, TouchableHighlight } from "react-native";
+import FinishIcon from "../icons/FinishIcon";
 
-type NextButtonType = {
+type FinishButtonType = {
     onPress: Function,
     disabled: boolean
 }
 
-export default function NextButton({ onPress, disabled }: NextButtonType) {
+export default function FinishButton({ onPress, disabled }: FinishButtonType) {
   return (
     <TouchableHighlight onPress={() => {
       if (!disabled) {
         onPress()
       }
-    }} style={[styles.nextButton, disabled ? {backgroundColor: "#a6a4a8"} : {backgroundColor:"#084887"}]}>
-      <NextIcon/>
+    }} style={[styles.finishButton, disabled ? {backgroundColor: "#a6a4a8"} : {backgroundColor:"#084887"}]}>
+      <FinishIcon/>
     </TouchableHighlight>
   );
 }
 
 const styles = StyleSheet.create({
-    nextButton: {
+    finishButton: {
       width: 48,
       height: 48,
       borderRadius: 999,
