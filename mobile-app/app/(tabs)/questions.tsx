@@ -18,7 +18,7 @@ import BackButton from "@/components/buttons/BackButton";
 import NextButton from "@/components/buttons/NextButton";
 import FinishButton from "@/components/buttons/FinishButton";
 
-export default function HomeScreen() {
+export default function QuestionsScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
@@ -38,7 +38,7 @@ export default function HomeScreen() {
   } else {
     greeting = "night!";
   }
-  const { questions, answers } = useQuestions();
+  const { questions, answers, setAnswers } = useQuestions();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   if (!questions) {
     return <View />;

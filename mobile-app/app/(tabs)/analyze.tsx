@@ -27,7 +27,7 @@ export default function AnalyzeScreen() {
   } else {
     greeting = "night!";
   }
-  const { answers } = useQuestions();
+  const { answers, setAnswers } = useQuestions();
   const { image } = useImage();
 
   
@@ -74,7 +74,8 @@ export default function AnalyzeScreen() {
           </ThemedText>
           <CloseButton
             onPress={async () => {
-              await test(image.uri)
+              setAnswers({})
+              router.push('/')
             }}
           />
         </View>
