@@ -56,7 +56,7 @@ export default function HomeScreen() {
       <View style={styles.bottom}>
         <View>
           <CameraButton onPress = {() => {
-            router.push('/camera')
+            router.replace('/camera')
           }}/>
         </View>
         <ThemedText type="subtext">Detect skin cancer</ThemedText>

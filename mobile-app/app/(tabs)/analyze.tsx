@@ -1,4 +1,6 @@
 // @ts-nocheck
+import { useEffect, useState } from "react";
+
 import { StyleSheet, View, Dimensions, Image } from "react-native";
 import { MotiView } from "moti";
 import { ThemedText } from "@/components/ThemedText";
@@ -12,6 +14,8 @@ import CloseButton from "@/components/buttons/CloseButton";
 import { uploadImage, test } from "@/scripts/file-upload";
 
 export default function AnalyzeScreen() {
+  const [result, setResult] = useState();
+  
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
@@ -27,9 +31,23 @@ export default function AnalyzeScreen() {
   } else {
     greeting = "night!";
   }
+
   const { answers, setAnswers } = useQuestions();
   const { image } = useImage();
-  uploadImage(image.uri, answers);
+  const [currentUri, setCurrentUri] = useState(image.uri);
+  const fetchData = async () => {
+    const res = await uploadImage(image.uri, answers);
+    setResult(res);
+  };
+  useEffect(() => {
+    fetchData();
+    return () => {}
+  }, [fetchData])
+  
+  // refetch data on finding a new uri
+  if (image.uri === currentUri){
+    fetchData
+  }
   // TODO: Error handling
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
@@ -48,47 +66,57 @@ export default function AnalyzeScreen() {
       </View>
       <View>
         <View style={styles.middle}>
-          <View>
+          <View style={{ position: "relative" }}>
             <Image
               source={{ uri: image && image.uri }}
               style={styles.cameraBox}
             />
+            {result && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "rgba(0, 0, 0, 0.25)",
+                  borderRadius: 24,
+                  padding: 40,
+                }}
+              >
+                <ThemedText style={{ color: "#FFFFFF" }}>hi</ThemedText>
+              </View>
+            )}
           </View>
-          <View
-            style={{
-              width: "100%",
-              height: 16,
-            }}
-          >
-            <MotiView
+          {!result && (
+            <View
               style={{
-                borderRadius: 9999,
-                height: 8,
                 width: "100%",
-                backgroundColor: "#084887",
-                transformOrigin: 'left'
+                height: 16,
               }}
-              from={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{
-                type: 'timing',
-                duration: 3500
-              }}
-            />
-          </View>
-          <ThemedText type="defaultSemiBold" style={{ marginTop: -18 }}>
-            Sending photos to our server!
-          </ThemedText>
+            >
+              <MotiView
+                style={{
+                  borderRadius: 9999,
+                  height: 8,
+                  width: "100%",
+                  backgroundColor: "#084887",
+                  transformOrigin: "left",
+                }}
+                from={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  type: "timing",
+                  duration: 250,
+                  repeat: 9999,
+                }}
+              />
+            </View>
+          )}
           <CloseButton
             onPress={async () => {
               setAnswers({});
-              router.push("/");
-            }}
-          />
-          <CloseButton
-            onPress={async () => {
-              setAnswers({});
-              router.push("/");
+              router.replace("/");
             }}
           />
         </View>

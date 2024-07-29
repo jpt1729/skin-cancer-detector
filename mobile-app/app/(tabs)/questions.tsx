@@ -28,7 +28,7 @@ export default function QuestionsScreen() {
 
   const { image } = useImage();
   if (image === null) {
-    router.push("/"); // something happened and they need to be sent back
+    router.replace("/"); // something happened and they need to be sent back
   }
   const currentHour = new Date().getHours();
   let greeting;
@@ -77,7 +77,7 @@ export default function QuestionsScreen() {
               <CloseButton
                 onPress={() => {
                   setCurrentQuestion(0);
-                  router.push("/");
+                  router.replace("/");
                 }}
               />
             )}
@@ -109,7 +109,7 @@ export default function QuestionsScreen() {
               <FinishButton
                 onPress={() => {
                   setCurrentQuestion(0);
-                  router.push("/analyze");
+                  router.replace("/analyze");
                 }}
                 disabled={
                   !answers[questions["questions"][currentQuestion]["name"]]

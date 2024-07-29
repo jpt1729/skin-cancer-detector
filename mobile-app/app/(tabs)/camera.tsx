@@ -52,7 +52,7 @@ export default function CameraScreen() {
     });
     console.log(photo);
     updateImage(photo);
-    router.push("/questions");
+    router.replace("/questions");
   };
   return (
     <CameraView
@@ -82,7 +82,7 @@ export default function CameraScreen() {
         >
           <CloseButton
             onPress={() => {
-              router.push("/");
+              router.replace("/");
             }}
           />
 
