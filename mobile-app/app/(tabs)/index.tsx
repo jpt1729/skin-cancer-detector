@@ -10,10 +10,12 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import CameraButton from "@/components/buttons/CameraButton";
 import { useFact } from "@/hooks/useFact";
 
+
+import HelloWorld from "@/components/AnimationTest";
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
@@ -30,6 +32,8 @@ export default function HomeScreen() {
   } else {
     greeting = "night!";
   }
+  
+  const navigation = useNavigation()
 
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>

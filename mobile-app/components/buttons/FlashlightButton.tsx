@@ -1,5 +1,6 @@
 import { View, Button, StyleSheet, TouchableHighlight, Text } from "react-native";
 import FlashlightIcon from "../icons/FlashlightIcon";
+import { MotiView } from "moti";
 
 type FlashlightButtonType = {
     onPress: Function,
@@ -11,7 +12,7 @@ export default function FlashlightButton({ onPress, flash }: FlashlightButtonTyp
     <TouchableHighlight onPress={() => {
         onPress()
     }} style={styles.closeButton}>
-      <FlashlightIcon/>
+      <FlashlightIcon flash={flash}/>
     </TouchableHighlight>
   );
 }

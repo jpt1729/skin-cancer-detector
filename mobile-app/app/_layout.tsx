@@ -1,6 +1,8 @@
+import { useCallback } from 'react';
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useFocusEffect } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -20,7 +22,16 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+  useFocusEffect(
+    useCallback(() => {
+      // This effect runs every time the screen comes into focus
+      // Reset the state or perform any necessary action here
 
+      return () => {
+        // Cleanup if necessary when the screen goes out of focus
+      };
+    }, [])
+  );
   if (!loaded) {
     return null;
   }

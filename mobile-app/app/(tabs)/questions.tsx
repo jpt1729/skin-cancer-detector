@@ -18,11 +18,13 @@ import BackButton from "@/components/buttons/BackButton";
 import NextButton from "@/components/buttons/NextButton";
 import FinishButton from "@/components/buttons/FinishButton";
 
+import { AnimatePresence, MotiView } from "moti";
+
 export default function QuestionsScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
-  const { fact } = useFact()
+  const { fact } = useFact();
 
   const { image } = useImage();
   if (image === null) {
@@ -54,8 +56,7 @@ export default function QuestionsScreen() {
         </View>
         <View>
           <ThemedText>
-            <ThemedText type="highlight">Did you know?</ThemedText>{" "}
-            {fact}
+            <ThemedText type="highlight">Did you know?</ThemedText> {fact}
           </ThemedText>
         </View>
       </View>
@@ -64,11 +65,13 @@ export default function QuestionsScreen() {
           <ThemedText type="defaultSemiBold">
             <ThemedText type="highlight">Questions</ThemedText>
           </ThemedText>
-          <MultiChoice
-            title={questions["questions"][currentQuestion].title}
-            name={questions["questions"][currentQuestion].name}
-            options={questions["questions"][currentQuestion]["options"]}
-          />
+          <AnimatePresence>
+            <MultiChoice
+              title={questions["questions"][currentQuestion].title}
+              name={questions["questions"][currentQuestion].name}
+              options={questions["questions"][currentQuestion]["options"]}
+            />
+          </AnimatePresence>
           <View style={styles.ButtonView}>
             {currentQuestion === 0 && (
               <CloseButton
@@ -88,36 +91,58 @@ export default function QuestionsScreen() {
                 }}
               />
             )}
-            {currentQuestion + 1 !== questions["questions"].length && <NextButton
-              onPress={() => {
-                if (currentQuestion + 1 < questions["questions"].length) {
-                  setCurrentQuestion(currentQuestion + 1);
-                  return;
+            {currentQuestion + 1 !== questions["questions"].length && (
+              <NextButton
+                onPress={() => {
+                  if (currentQuestion + 1 < questions["questions"].length) {
+                    setCurrentQuestion(currentQuestion + 1);
+                    return;
+                  }
+                  // final question code here
+                }}
+                disabled={
+                  !answers[questions["questions"][currentQuestion]["name"]]
                 }
-                // final question code here
-              }}
-              disabled={!answers[questions["questions"][currentQuestion]["name"]]}
-            />}
-            {currentQuestion + 1 === questions["questions"].length && <FinishButton
-              onPress={() => {
-                setCurrentQuestion(0);
-                router.push("/analyze");
-              }}
-              disabled={!answers[questions["questions"][currentQuestion]["name"]]}
-            />}
+              />
+            )}
+            {currentQuestion + 1 === questions["questions"].length && (
+              <FinishButton
+                onPress={() => {
+                  setCurrentQuestion(0);
+                  router.push("/analyze");
+                }}
+                disabled={
+                  !answers[questions["questions"][currentQuestion]["name"]]
+                }
+              />
+            )}
           </View>
         </View>
-        <Image
-          source={{ uri: image && image.uri }}
-          style={{
-            width: 155,
-            height: 155,
-            borderColor: "#084887",
-            borderRadius: 15,
-            borderWidth: 2,
-            marginLeft: "auto",
+        <MotiView
+          from={{
+            opacity: 0,
+            translateY: 15,
           }}
-        />
+          animate={{
+            opacity: 1,
+            translateY: 0,
+          }}
+          transition={{
+            type: "timing",
+          }}
+        >
+          <Image
+            source={{ uri: image && image.uri }}
+            style={{
+              width: 155,
+              height: 155,
+              borderColor: "#084887",
+              borderRadius: 15,
+              borderWidth: 2,
+              marginLeft: "auto",
+            }}
+          />
+        </MotiView>
       </View>
     </View>
   );
@@ -145,7 +170,7 @@ const styles = StyleSheet.create({
     margin: 40,
     display: "flex",
     flexDirection: "column",
-    gap: 24
+    gap: 24,
   },
   dividerBar: {
     marginVertical: 9,

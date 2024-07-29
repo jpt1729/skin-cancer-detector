@@ -64,20 +64,27 @@ export default function AnalyzeScreen() {
               style={{
                 borderRadius: 9999,
                 height: 8,
-                width: 100,
+                width: "100%",
                 backgroundColor: "#084887",
+                transformOrigin: 'left'
               }}
-              from={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
+              from={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
               transition={{
-                type: "timing",
-                duration: 350,
+                type: 'timing',
+                duration: 3500
               }}
             />
           </View>
           <ThemedText type="defaultSemiBold" style={{ marginTop: -18 }}>
             Sending photos to our server!
           </ThemedText>
+          <CloseButton
+            onPress={async () => {
+              setAnswers({});
+              router.push("/");
+            }}
+          />
           <CloseButton
             onPress={async () => {
               setAnswers({});

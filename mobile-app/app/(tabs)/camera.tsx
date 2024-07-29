@@ -10,24 +10,29 @@ import {
 import { useState, useRef } from "react";
 import { CameraView, FlashMode, useCameraPermissions } from "expo-camera";
 
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 import CloseButton from "@/components/buttons/CloseButton";
 import FlashlightButton from "@/components/buttons/FlashlightButton";
 import CameraButton from "@/components/buttons/CameraButton";
 import { ThemedText } from "@/components/ThemedText";
 
-import { useImage } from "@/hooks/usePhotoContext"; 
+import { useImage } from "@/hooks/usePhotoContext";
+
+import { MotiView } from "moti";
+
 
 let camera: any;
 export default function CameraScreen() {
+  const navigation = useNavigation();
+
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
   const [permission, requestPermission] = useCameraPermissions();
   const [flash, setFlash] = useState<FlashMode>("off");
   const [cameraReady, setCameraReady] = useState<boolean>(false);
 
-  const { updateImage } = useImage()
+  const { updateImage } = useImage();
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -43,11 +48,11 @@ export default function CameraScreen() {
   }
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync({
-        skipProcessing: true,
+      skipProcessing: true,
     });
     console.log(photo);
-    updateImage(photo)
-    router.push('/questions')
+    updateImage(photo);
+    router.push("/questions");
   };
   return (
     <CameraView
@@ -61,19 +66,33 @@ export default function CameraScreen() {
       }}
     >
       <View style={[styles.viewContainer, { height: dynamicHeight }]}>
-        <View style={styles.topMenu}>
+        <MotiView
+          from={{
+            opacity: 0,
+            translateY: -15,
+          }}
+          animate={{
+            opacity: 1,
+            translateY: 0,
+          }}
+          transition={{
+            type: "timing",
+          }}
+          style={styles.topMenu}
+        >
           <CloseButton
             onPress={() => {
               router.push("/");
             }}
           />
+
           <FlashlightButton
             onPress={() => {
-              setFlash("on");
+              setFlash(flash === 'on' ? 'off' : 'on');
             }}
             flash={flash}
           />
-        </View>
+        </MotiView>
         <View style={styles.middle}>
           <View style={styles.cameraBox}></View>
           <View style={styles.cameraStatus}>
@@ -82,18 +101,29 @@ export default function CameraScreen() {
             </ThemedText>
           </View>
         </View>
-        <View style={styles.bottom}>
+        <MotiView from={{
+            opacity: 0,
+            translateY: 15,
+          }}
+          animate={{
+            opacity: 1,
+            translateY: 0,
+          }}
+          transition={{
+            type: "timing",
+          }}
+          style={styles.bottom}>
           <CameraButton
             onPress={() => {
               if (cameraReady) {
                 if (camera) {
-                    takePhoto();
+                  takePhoto();
                 }
               }
             }}
             disabled={!cameraReady}
           />
-        </View>
+        </MotiView>
       </View>
     </CameraView>
   );
