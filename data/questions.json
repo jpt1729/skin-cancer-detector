@@ -27,44 +27,44 @@
       ]
     },
     {
-        "title": "What part of the body is this?",
-        "name": "body-part",
-        "options": [
-          {
-            "name": "lower extremity (leg, hip, thigh, etc.)",
-            "value": "lower-extremity"
-          },
-          {
-            "name": "upper extremity (arm, wrist, hand, etc.)",
-            "value": "upper-extremity"
-          },
-          {
-            "name": "anterior torso (front chest, stomach, etc.)",
-            "value": "anterior-torso"
-          },
-          {
-            "name": "posterior torso (back, shoulders, etc.)",
-            "value": "posterior-torso"
-          },
-          {
-            "name": "head/neck",
-            "value": "head"
-          }
-        ]
-      },
-      {
-        "title": "Sex",
-        "name": "sex",
-        "options": [
-          {
-            "name": "male",
-            "value": "male"
-          },
-          {
-            "name": "female",
-            "value": "female"
-          }
-        ]
-      }
+      "title": "Age group",
+      "name": "age",
+      "options": [
+        {
+          "name": "0-19",
+          "value": "0-19"
+        },
+        {
+          "name": "20-39",
+          "value": "upper-extremity"
+        },
+        {
+          "name": "40-59",
+          "value": "40-59"
+        },
+        {
+          "name": "60-79",
+          "value": "60-79"
+        },
+        {
+          "name": "80-99",
+          "value": "80-99"
+        }
+      ]
+    },
+    {
+      "title": "Sex",
+      "name": "sex",
+      "options": [
+        {
+          "name": "male",
+          "value": "male"
+        },
+        {
+          "name": "female",
+          "value": "female"
+        }
+      ]
+    }
   ]
 }
