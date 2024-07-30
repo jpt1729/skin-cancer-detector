@@ -69,7 +69,7 @@ export default function CameraScreen() {
           },
         },
       ],
-      { compress: 1, format: SaveFormat.WEBP }
+      { compress: 1, format: SaveFormat.JPEG }
     );
     updateImage(imageProcessed);
     router.replace("/questions");
