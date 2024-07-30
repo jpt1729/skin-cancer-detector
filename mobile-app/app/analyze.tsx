@@ -15,8 +15,6 @@ import { uploadImage, imagePreprocessing } from "@/scripts/file-upload";
 
 import DiagnosisMessage from "@/components/DiagnosisMessage";
 
-import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-
 export default function AnalyzeScreen() {
   const [result, setResult] = useState();
 
@@ -39,35 +37,16 @@ export default function AnalyzeScreen() {
   const { answers, setAnswers } = useQuestions();
   const { image, updateImage } = useImage();
   const [currentUri, setCurrentUri] = useState(image.uri);
-  const fetchData = async () => {
-    try {
-      const imageProcessed = await manipulateAsync(
-        image.uri,
-        [
-          { rotate: 90 },
-          {
-            crop: {
-              originX: width / 2 + 150,
-              originY: height / 2 + 150, // This will need to be changed
-              width: 300,
-              height: 300,
-            },
-          },
-        ],
-        { compress: 1, format: SaveFormat.JPEG }
-      );
-      console.log(imageProcessed);
-      const res = await uploadImage(imageProcessed.uri, answers);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await uploadImage(image.uri, answers);
       await new Promise((resolve) => setTimeout(resolve, 3500));
       setResult(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
+    };
     fetchData();
     return () => {};
-  }, [fetchData]);
+  }, [width, height, uploadImage, setResult]);
 
   // TODO: Error handling
   return (

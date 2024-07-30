@@ -10,7 +10,8 @@ import {
 import { useState, useRef } from "react";
 import { CameraView, FlashMode, useCameraPermissions } from "expo-camera";
 
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 import CloseButton from "@/components/buttons/CloseButton";
 import FlashlightButton from "@/components/buttons/FlashlightButton";
@@ -24,9 +25,8 @@ import { MotiView } from "moti";
 
 let camera: any;
 export default function CameraScreen() {
-  const navigation = useNavigation();
 
-  const { height } = Dimensions.get("window");
+  const { width, height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
   const [permission, requestPermission] = useCameraPermissions();
   const [flash, setFlash] = useState<FlashMode>("off");
@@ -49,9 +49,29 @@ export default function CameraScreen() {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync({
       skipProcessing: true,
-      scale: 0.5
     });
-    updateImage(photo);
+    const imageProcessed = await manipulateAsync(
+      photo.uri,
+      [
+        {
+          resize: {
+            // Turns the image back into the same size as the screen
+            width: width,
+            height: height,
+          },
+        },
+        {
+          crop: {
+            originX: width / 2 - 150,
+            originY: height / 2 - 150 - 8 - 15 - 12, // This accounts for the camera status which moves the box up by a bit
+            width: 300,
+            height: 300,
+          },
+        },
+      ],
+      { compress: 1, format: SaveFormat.WEBP }
+    );
+    updateImage(imageProcessed);
     router.replace("/questions");
   };
   return (
@@ -149,18 +169,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
   },
-  middle: {
-    display: "flex",
-    gap: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   bottom: {
     display: "flex",
     gap: 12,
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 28, // Extra padding so button stays in the same location on page switches
+  },
+  middle: {
+    display: "flex",
+    gap: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cameraBox: {
     height: 300,

@@ -50,7 +50,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="index" options={{ headerShown: false, animation: 'none' }} />
               <Stack.Screen name="camera" options={{ headerShown: false, animation: 'none' }} />
-              <Stack.Screen name="questions" options={{ headerShown: false, animation: 'none' }} />
+              <Stack.Screen name="questions" options={{ headerShown: false }} />
               <Stack.Screen name="analyze" options={{ headerShown: false, animation: 'none' }} />
               <Stack.Screen name="+not-found" />
             </Stack>
