@@ -10,12 +10,12 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import CameraButton from "@/components/buttons/CameraButton";
 import { useFact } from "@/hooks/useFact";
+import { useImage } from "@/hooks/usePhotoContext";
+import { useQuestions } from "@/hooks/useQuestionsContext";
 
-
-import HelloWorld from "@/components/AnimationTest";
 export default function HomeScreen() {
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
@@ -32,9 +32,8 @@ export default function HomeScreen() {
   } else {
     greeting = "night!";
   }
-  
-  const navigation = useNavigation()
-
+  const { imageReady } = useImage();
+  const { questionsReady } = useQuestions();
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
       <View>
@@ -56,10 +55,14 @@ export default function HomeScreen() {
       <View style={styles.bottom}>
         <View>
           <CameraButton onPress = {() => {
-            router.replace('/camera')
-          }}/>
+            if (imageReady && questionsReady) {
+              router.replace('/camera')
+            }
+          }}
+          disabled={!(imageReady && questionsReady)}
+          />
         </View>
-        <ThemedText type="subtext">Detect skin cancer</ThemedText>
+        <ThemedText type="subtext">{!(imageReady && questionsReady) && "Loading"}{(imageReady && questionsReady) && "Detect skin cancer"}</ThemedText>
       </View>
     </View>
   );

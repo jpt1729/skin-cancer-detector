@@ -1,21 +1,27 @@
 import * as FileSystem from "expo-file-system";
 import { Dimensions } from "react-native";
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import { useImage } from '@/hooks/usePhotoContext'
 
 
-export const uploadImage = async (uri: string, answers: any) => {
+export const uploadImage = async (uri: string, answers: any, imageDetails: any) => {
   //TODO: UPDATE URL
-  const url = new URL ("http://10.0.0.145:5000/upload")
+  const url = new URL (`${process.env.EXPO_PUBLIC_API_URL}/upload`)
   url.search = new URLSearchParams(answers).toString();
+  console.log(imageDetails)
+  const processedUri = await manipulateAsync(uri, [{resize: {
+    width: imageDetails["resolution"]["width"],
+    height: imageDetails["resolution"]["height"],
+  }}])
+  console.log(processedUri)
   const res = await FileSystem.uploadAsync(
     url.toString(),
-    uri,
+    processedUri.uri,
     {
       httpMethod: "PATCH",
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
       fieldName: "photo",
     }
   );
+  console.log(res)
   return res;
 };

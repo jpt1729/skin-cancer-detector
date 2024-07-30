@@ -35,12 +35,12 @@ export default function AnalyzeScreen() {
   }
 
   const { answers, setAnswers } = useQuestions();
-  const { image, updateImage } = useImage();
+  const { image, updateImage, imageDetails } = useImage();
   const [currentUri, setCurrentUri] = useState(image.uri);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await uploadImage(image.uri, answers);
+      const res = await uploadImage(image.uri, answers, imageDetails);
       await new Promise((resolve) => setTimeout(resolve, 3500));
       setResult(res);
     };

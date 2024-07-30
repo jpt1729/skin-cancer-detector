@@ -3,7 +3,8 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 type QuestionsContextType = {
   questions: any[] | null,
   answers: object,
-  setAnswers: Function
+  setAnswers: Function,
+  questionsReady: boolean,
 };
 type QuestionsProviderProps = {
   children: ReactNode;
@@ -80,31 +81,34 @@ const QuestionsContext = createContext<QuestionsContextType>({
       }
     ],
     answers: {}, // defaults
-    setAnswers: () => {} //defaults
+    setAnswers: () => {}, //defaults
+    questionsReady: false,
   });
 
 export const QuestionsProvider = ({ children }: QuestionsProviderProps) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState({})
-
+  const [questionsReady, setQuestionsReady] = useState(false)
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
+        console.log(process.env)
         const response = await fetch(
-          "https://raw.githubusercontent.com/jpt1729/skin-cancer-detector/main/data/questions.json"
+          `${process.env.EXPO_PUBLIC_API_URL}/questions`
         );
         const data = await response.json();
         setQuestions(data);
+        setQuestionsReady(true)
       } catch (error) {
         console.error("Error fetching questions:", error);
       }
     };
 
     fetchQuestions();
-  }, []);
+  }, [setQuestionsReady]);
 
   return (
-    <QuestionsContext.Provider value={{ questions, answers, setAnswers }}>
+    <QuestionsContext.Provider value={{ questions, answers, setAnswers, questionsReady }}>
       {children}
     </QuestionsContext.Provider>
   );
