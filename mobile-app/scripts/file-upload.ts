@@ -2,8 +2,7 @@ import * as FileSystem from "expo-file-system";
 
 export const uploadImage = async (uri: string, answers: any) => {
   //TODO: UPDATE URL
-  console.log(uri)
-  const url = new URL ("http://10.0.0.145:5000/multipart-upload")
+  const url = new URL ("http://10.0.0.145:5000/upload")
   url.search = new URLSearchParams(answers).toString();
   const res = await FileSystem.uploadAsync(
     url.toString(),
@@ -14,5 +13,5 @@ export const uploadImage = async (uri: string, answers: any) => {
       fieldName: "photo",
     }
   );
-  return (JSON.stringify(res, null, 4));
+  return res;
 };

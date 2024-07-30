@@ -48,9 +48,7 @@ export default function CameraScreen() {
   }
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync({
-      skipProcessing: true,
     });
-    console.log(photo);
     updateImage(photo);
     router.replace("/questions");
   };

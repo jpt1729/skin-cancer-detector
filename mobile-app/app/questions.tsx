@@ -18,7 +18,7 @@ import BackButton from "@/components/buttons/BackButton";
 import NextButton from "@/components/buttons/NextButton";
 import FinishButton from "@/components/buttons/FinishButton";
 
-import { AnimatePresence, MotiView } from "moti";
+import { AnimatePresence, MotiImage } from "moti";
 
 export default function QuestionsScreen() {
   const { height } = Dimensions.get("window");
@@ -76,6 +76,7 @@ export default function QuestionsScreen() {
             {currentQuestion === 0 && (
               <CloseButton
                 onPress={() => {
+                  setAnswers({})
                   setCurrentQuestion(0);
                   router.replace("/");
                 }}
@@ -118,7 +119,8 @@ export default function QuestionsScreen() {
             )}
           </View>
         </View>
-        <MotiView
+        <MotiImage
+          source={{ uri: image && image.uri }}
           from={{
             opacity: 0,
             translateY: 15,
@@ -130,19 +132,15 @@ export default function QuestionsScreen() {
           transition={{
             type: "timing",
           }}
-        >
-          <Image
-            source={{ uri: image && image.uri }}
-            style={{
-              width: 155,
-              height: 155,
-              borderColor: "#084887",
-              borderRadius: 15,
-              borderWidth: 2,
-              marginLeft: "auto",
-            }}
-          />
-        </MotiView>
+          style={{
+            width: 155,
+            height: 155,
+            borderColor: "#084887",
+            borderRadius: 15,
+            borderWidth: 2,
+            marginLeft: "auto",
+          }}
+        />
       </View>
     </View>
   );

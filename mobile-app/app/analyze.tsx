@@ -13,9 +13,11 @@ import CloseButton from "@/components/buttons/CloseButton";
 
 import { uploadImage, test } from "@/scripts/file-upload";
 
+import DiagnosisMessage from "@/components/DiagnosisMessage";
+
 export default function AnalyzeScreen() {
   const [result, setResult] = useState();
-  
+
   const { height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
@@ -37,17 +39,14 @@ export default function AnalyzeScreen() {
   const [currentUri, setCurrentUri] = useState(image.uri);
   const fetchData = async () => {
     const res = await uploadImage(image.uri, answers);
+    await new Promise(resolve => setTimeout(resolve, 3500));
     setResult(res);
   };
   useEffect(() => {
     fetchData();
-    return () => {}
-  }, [fetchData])
-  
-  // refetch data on finding a new uri
-  if (image.uri === currentUri){
-    fetchData
-  }
+    return () => {};
+  }, [fetchData]);
+
   // TODO: Error handling
   return (
     <View style={[styles.viewContainer, { height: dynamicHeight }]}>
@@ -79,12 +78,31 @@ export default function AnalyzeScreen() {
                   left: 0,
                   width: "100%",
                   height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 0.25)",
+                  backgroundColor: "rgba(0, 0, 0, 0.45)",
                   borderRadius: 24,
                   padding: 40,
                 }}
               >
-                <ThemedText style={{ color: "#FFFFFF" }}>hi</ThemedText>
+                <MotiView
+                  from={{
+                    opacity: 0,
+                    translateY: 15,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    translateY: 0,
+                  }}
+                  transition={{
+                    type: "timing",
+                  }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 24
+                  }}
+                >
+                  <DiagnosisMessage result={result} />
+                </MotiView>
               </View>
             )}
           </View>
@@ -113,12 +131,14 @@ export default function AnalyzeScreen() {
               />
             </View>
           )}
-          <CloseButton
-            onPress={async () => {
-              setAnswers({});
-              router.replace("/");
-            }}
-          />
+          {result && (
+            <CloseButton
+              onPress={async () => {
+                setAnswers({});
+                router.replace("/");
+              }}
+            />
+          )}
         </View>
       </View>
     </View>

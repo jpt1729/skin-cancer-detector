@@ -1,20 +1,26 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack, useFocusEffect } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-import 'react-native-gesture-handler'
-import { useColorScheme } from '@/hooks/useColorScheme';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack, useFocusEffect } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import "react-native-gesture-handler";
 
+import { ImageProvider } from "@/hooks/usePhotoContext";
+import { QuestionsProvider } from "@/hooks/useQuestionsContext";
+import { FactProvider } from "@/hooks/useFact";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    const [loaded] = useFonts({
-    Inter: require('../assets/fonts/Inter.ttf'),
+  const [loaded] = useFonts({
+    Inter: require("../assets/fonts/Inter.ttf"),
   });
 
   useEffect(() => {
@@ -37,11 +43,20 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <FactProvider>
+      <QuestionsProvider>
+        <ImageProvider>
+          <ThemeProvider value={DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false, animation: 'none' }} />
+              <Stack.Screen name="camera" options={{ headerShown: false, animation: 'none' }} />
+              <Stack.Screen name="questions" options={{ headerShown: false, animation: 'none' }} />
+              <Stack.Screen name="analyze" options={{ headerShown: false, animation: 'none' }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </ThemeProvider>
+        </ImageProvider>
+      </QuestionsProvider>
+    </FactProvider>
   );
 }
