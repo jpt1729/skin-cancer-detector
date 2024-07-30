@@ -11,14 +11,16 @@ import { useQuestions } from "@/hooks/useQuestionsContext";
 import { useImage } from "@/hooks/usePhotoContext";
 import CloseButton from "@/components/buttons/CloseButton";
 
-import { uploadImage, test } from "@/scripts/file-upload";
+import { uploadImage, imagePreprocessing } from "@/scripts/file-upload";
 
 import DiagnosisMessage from "@/components/DiagnosisMessage";
+
+import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 export default function AnalyzeScreen() {
   const [result, setResult] = useState();
 
-  const { height } = Dimensions.get("window");
+  const { width, height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
 
   const { fact } = useFact();
@@ -35,12 +37,32 @@ export default function AnalyzeScreen() {
   }
 
   const { answers, setAnswers } = useQuestions();
-  const { image } = useImage();
+  const { image, updateImage } = useImage();
   const [currentUri, setCurrentUri] = useState(image.uri);
   const fetchData = async () => {
-    const res = await uploadImage(image.uri, answers);
-    await new Promise(resolve => setTimeout(resolve, 3500));
-    setResult(res);
+    try {
+      const imageProcessed = await manipulateAsync(
+        image.uri,
+        [
+          { rotate: 90 },
+          {
+            crop: {
+              originX: width / 2 + 150,
+              originY: height / 2 + 150, // This will need to be changed
+              width: 300,
+              height: 300,
+            },
+          },
+        ],
+        { compress: 1, format: SaveFormat.JPEG }
+      );
+      console.log(imageProcessed);
+      const res = await uploadImage(imageProcessed.uri, answers);
+      await new Promise((resolve) => setTimeout(resolve, 3500));
+      setResult(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
     fetchData();
@@ -96,9 +118,9 @@ export default function AnalyzeScreen() {
                     type: "timing",
                   }}
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 24
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 24,
                   }}
                 >
                   <DiagnosisMessage result={result} />

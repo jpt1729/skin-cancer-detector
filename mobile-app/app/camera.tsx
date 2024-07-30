@@ -48,6 +48,8 @@ export default function CameraScreen() {
   }
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync({
+      skipProcessing: true,
+      scale: 0.5
     });
     updateImage(photo);
     router.replace("/questions");
@@ -112,10 +114,10 @@ export default function CameraScreen() {
           }}
           style={styles.bottom}>
           <CameraButton
-            onPress={() => {
+            onPress={async () => {
               if (cameraReady) {
                 if (camera) {
-                  takePhoto();
+                  await takePhoto();
                 }
               }
             }}
