@@ -29,6 +29,7 @@ export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [flash, setFlash] = useState<FlashMode>("off");
   const [cameraReady, setCameraReady] = useState<boolean>(false);
+  const [pictureSize, setPictureSize] = useState();
 
   const { updateImage } = useImage();
   if (!permission) {
@@ -51,25 +52,23 @@ export default function CameraScreen() {
     });
     let imageProcessed;
     if (Platform.OS === "android") {
-      console.log(photo.height/photo.width)
-      console.log(height/width)
       imageProcessed = await manipulateAsync(photo.uri, [
         {
           resize: {
             // Turns the image back into the same size as the screen
-            width: width,
             height: height,
           },
         },
         {
           crop: {
-            originX: width / 2 - 150,
-            originY: height / 2 - 150 - 8 - 15 - 12, // This accounts for the camera status which moves the box up by a bit
+            originX: (height/photo.height * width) / 2 - 150,
+            originY: (height)  / 2 - 150 - 8 - 15 - 12, // This accounts for the camera status which moves the box up by a bit
             width: 300,
             height: 300,
           },
         },
-      ])
+      ], {compress: 1});
+      console.log(imageProcessed.height, imageProcessed.width)
     } else {
       imageProcessed = await manipulateAsync(photo.uri, [
         {
@@ -89,7 +88,7 @@ export default function CameraScreen() {
         },
       ]);
     }
-    updateImage(imageProcessed);
+    updateImage(photo);
     router.replace("/questions");
   };
   return (
@@ -99,7 +98,7 @@ export default function CameraScreen() {
       onCameraReady={() => {
         setCameraReady(true);
       }}
-      ref={(r) => {
+      ref={async (r) => {
         camera = r;
       }}
     >
