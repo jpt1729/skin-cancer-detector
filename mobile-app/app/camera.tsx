@@ -22,10 +22,8 @@ import { useImage } from "@/hooks/usePhotoContext";
 
 import { MotiView } from "moti";
 
-
 let camera: any;
 export default function CameraScreen() {
-
   const { width, height } = Dimensions.get("window");
   const dynamicHeight = height - 120;
   const [permission, requestPermission] = useCameraPermissions();
@@ -47,12 +45,15 @@ export default function CameraScreen() {
     );
   }
   const takePhoto = async () => {
+    setCameraReady(false);
     const photo = await camera.takePictureAsync({
       skipProcessing: true,
     });
-    const imageProcessed = await manipulateAsync(
-      photo.uri,
-      [
+    let imageProcessed;
+    if (Platform.OS === "android") {
+      console.log(photo.height/photo.width)
+      console.log(height/width)
+      imageProcessed = await manipulateAsync(photo.uri, [
         {
           resize: {
             // Turns the image back into the same size as the screen
@@ -68,9 +69,26 @@ export default function CameraScreen() {
             height: 300,
           },
         },
-      ],
-      { compress: 1, format: SaveFormat.JPEG }
-    );
+      ])
+    } else {
+      imageProcessed = await manipulateAsync(photo.uri, [
+        {
+          resize: {
+            // Turns the image back into the same size as the screen
+            width: width,
+            height: height,
+          },
+        },
+        {
+          crop: {
+            originX: width / 2 - 150,
+            originY: height / 2 - 150 - 8 - 15 - 12, // This accounts for the camera status which moves the box up by a bit
+            width: 300,
+            height: 300,
+          },
+        },
+      ]);
+    }
     updateImage(imageProcessed);
     router.replace("/questions");
   };
@@ -108,7 +126,7 @@ export default function CameraScreen() {
 
           <FlashlightButton
             onPress={() => {
-              setFlash(flash === 'on' ? 'off' : 'on');
+              setFlash(flash === "on" ? "off" : "on");
             }}
             flash={flash}
           />
@@ -121,7 +139,8 @@ export default function CameraScreen() {
             </ThemedText>
           </View>
         </View>
-        <MotiView from={{
+        <MotiView
+          from={{
             opacity: 0,
             translateY: 15,
           }}
@@ -132,7 +151,8 @@ export default function CameraScreen() {
           transition={{
             type: "timing",
           }}
-          style={styles.bottom}>
+          style={styles.bottom}
+        >
           <CameraButton
             onPress={async () => {
               if (cameraReady) {

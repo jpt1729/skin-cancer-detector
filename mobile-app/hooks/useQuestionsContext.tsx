@@ -92,7 +92,6 @@ export const QuestionsProvider = ({ children }: QuestionsProviderProps) => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        console.log(process.env)
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_API_URL}/questions`
         );
