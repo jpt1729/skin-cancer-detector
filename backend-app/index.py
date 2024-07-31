@@ -3,6 +3,7 @@ import time
 from werkzeug.utils import secure_filename
 import os
 from PIL import Image
+import tensorflow as tf
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -15,27 +16,35 @@ questions = {
     "questions": [
         {
             "title": "What part of the body is this?",
-            "name": "body-part",
+            "name": "localizations",
             "options": [
                 {
                     "name": "lower extremity (leg, hip, thigh, etc.)",
-                    "value": "lower-extremity"
+                    "value": "lower extremity"
                 },
                 {
-                    "name": "upper extremity (arm, wrist, hand, etc.)",
-                    "value": "upper-extremity"
+                    "name": "upper extremity (biceps, forearm, etc.)",
+                    "value": "upper extremity"
+                },
+                {
+                    "name": "palm/soles",
+                    "value": "palm/soles",
                 },
                 {
                     "name": "anterior torso (front chest, stomach, etc.)",
-                    "value": "anterior-torso"
+                    "value": "anterior torso"
                 },
                 {
                     "name": "posterior torso (back, shoulders, etc.)",
-                    "value": "posterior-torso"
+                    "value": "posterior torso"
                 },
                 {
-                    "name": "head/neck",
-                    "value": "head"
+                    "name": 'lateral torso (side ribcage, "fish gills")',
+                    "value": "lateral torso"
+                },
+                {
+                    "name": "scalp",
+                    "value": "scalp"
                 }
             ]
         },
@@ -45,23 +54,23 @@ questions = {
             "options": [
                 {
                     "name": "0-19",
-                    "value": "0-19"
+                    "value": 10
                 },
                 {
                     "name": "20-39",
-                    "value": "20-39"
+                    "value": 30
                 },
                 {
                     "name": "40-59",
-                    "value": "40-59"
+                    "value": 50
                 },
                 {
                     "name": "60-79",
-                    "value": "60-79"
+                    "value": 70
                 },
                 {
                     "name": "80-99",
-                    "value": "80-99"
+                    "value": 90
                 }
             ]
         },
@@ -130,14 +139,13 @@ def upload():
             validate_answer('age', age) and
             validate_answer('sex', sex)):
         return {"error": 'Invalid answers'}, 400
-    
+    # Returns an array of seven probabilities
     return {"probability": 0.1}, 200
 
 
 @app.route('/model-details', methods=['GET'])
 def get_model_details():
     return jsonify(model_details), 200
-
 
 @app.route('/questions', methods=['GET'])
 def get_questions():
