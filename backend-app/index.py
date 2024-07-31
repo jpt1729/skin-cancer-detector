@@ -20,31 +20,31 @@ questions = {
             "options": [
                 {
                     "name": "lower extremity (leg, hip, thigh, etc.)",
-                    "value": "lower extremity"
+                    "value": 3
                 },
                 {
                     "name": "upper extremity (biceps, forearm, etc.)",
-                    "value": "upper extremity"
+                    "value": 4
                 },
                 {
                     "name": "palm/soles",
-                    "value": "palm/soles",
+                    "value": 8,
                 },
                 {
                     "name": "anterior torso (front chest, stomach, etc.)",
-                    "value": "anterior torso"
+                    "value": 6
                 },
                 {
                     "name": "posterior torso (back, shoulders, etc.)",
-                    "value": "posterior torso"
+                    "value": 7
                 },
                 {
                     "name": 'lateral torso (side ribcage, "fish gills")',
-                    "value": "lateral torso"
+                    "value": 8
                 },
                 {
                     "name": "scalp",
-                    "value": "scalp"
+                    "value": 1
                 }
             ]
         },
@@ -80,11 +80,11 @@ questions = {
             "options": [
                 {
                     "name": "male",
-                    "value": "male"
+                    "value": 0
                 },
                 {
                     "name": "female",
-                    "value": "female"
+                    "value": 1
                 }
             ]
         }
@@ -98,6 +98,52 @@ model_details = {"resolution": {
     "width": 256,
     "height": 256,
 }}
+
+
+def create_model():
+    model_txt = tf.keras.Sequential([
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dense(256, activation='relu'),
+    ])
+
+
+    model_img = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(None, None, 3)),
+        tf.keras.layers.RandomFlip(),
+        base_model,
+        tf.keras.layers.Conv2D(128, (3, 3), activation='gelu'),
+        tf.keras.layers.MaxPooling2D(),
+        tf.keras.layers.Conv2D(256, (3, 3), activation='gelu'),
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(256, activation='gelu'),
+    ])
+    txt_input = tf.keras.layers.Input(shape=(3,), name="txt")
+    img_input = tf.keras.layers.Input(shape=(256, 256, 3), name="img")
+    txt_side = model_txt(txt_input)
+    img_side = model_img(img_input)
+    merged = tf.keras.layers.Concatenate()([img_side, txt_side])
+    merged = tf.keras.layers.Dense(128, activation='gelu')(merged)
+    merged = tf.keras.layers.Dense(7, activation='softmax')(merged)
+
+    return tf.keras.Model(inputs=[img_input, txt_input], outputs=merged)
+
+
+def process_data(file_path, answers):
+    img = tf.io.read_file(file_path)
+    img = tf.io.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, [256, 256])/255.0
+    fn = tf.strings.split(file_path, sep='/')[-1]
+    fn = tf.strings.split(fn, sep='.')[0]
+    label = table.lookup(fn)
+    label = tf.strings.to_number(
+        tf.strings.split(label), out_type=tf.dtypes.int32)
+    features = feature_table.lookup(fn)
+    features = tf.strings.to_number(
+        tf.strings.split(features), out_type=tf.dtypes.int32)
+    feature = (img, features)
+    return feature, label
 
 
 def validate_answer(param_name, param_value):
@@ -122,15 +168,6 @@ def upload():
     if not file:
         return {"error": "File does not exist"}, 400
 
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-    img = Image.open(file)
-    width, height = img.size
-
-    if model_details["resolution"] != {"height": height, "width": width}:
-        return {"error": "Incorrect resolution"}, 400
-
     body_part = request.args.get('body-part')
     age = request.args.get('age')
     sex = request.args.get('sex')
@@ -139,6 +176,25 @@ def upload():
             validate_answer('age', age) and
             validate_answer('sex', sex)):
         return {"error": 'Invalid answers'}, 400
+
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+
+    # process_path(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    img = tf.io.read_file(file_path)
+    img = tf.io.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, [256, 256])/255.0
+
+    txt = [body_part, age, sex]
+
+    # Create a new model instance
+    model = create_model()
+
+    # Load the previously saved weights
+    model.load_weights('/models/multimodal-base.keras')
+
+    model.predict()
     # Returns an array of seven probabilities
     return {"probability": 0.1}, 200
 
@@ -146,6 +202,7 @@ def upload():
 @app.route('/model-details', methods=['GET'])
 def get_model_details():
     return jsonify(model_details), 200
+
 
 @app.route('/questions', methods=['GET'])
 def get_questions():
