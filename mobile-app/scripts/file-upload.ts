@@ -13,7 +13,7 @@ export const uploadImage = async (uri: string, answers: any, imageDetails: any) 
   }}])
   const res = await FileSystem.uploadAsync(
     url.toString(),
-    uri,
+    processedUri.uri,
     {
       httpMethod: "PATCH",
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
