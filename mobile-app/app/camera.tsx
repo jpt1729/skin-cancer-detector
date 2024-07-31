@@ -49,26 +49,28 @@ export default function CameraScreen() {
     setCameraReady(false);
     const photo = await camera.takePictureAsync({
       skipProcessing: true,
+      quality: 1
     });
     let imageProcessed;
     if (Platform.OS === "android") {
-      imageProcessed = await manipulateAsync(photo.uri, [
+      let imagePreProcessed = await manipulateAsync(photo.uri, [
         {
           resize: {
             // Turns the image back into the same size as the screen
             height: height,
           },
         },
+      ], {compress: 1});
+      imageProcessed = await manipulateAsync(imagePreProcessed.uri, [
         {
           crop: {
-            originX: (height/photo.height * width) / 2 - 150,
+            originX: imagePreProcessed.width / 2 - 150,
             originY: (height)  / 2 - 150 - 8 - 15 - 12, // This accounts for the camera status which moves the box up by a bit
             width: 300,
             height: 300,
           },
         },
-      ], {compress: 1});
-      console.log(imageProcessed.height, imageProcessed.width)
+      ], {compress: 1})
     } else {
       imageProcessed = await manipulateAsync(photo.uri, [
         {
@@ -88,7 +90,7 @@ export default function CameraScreen() {
         },
       ]);
     }
-    updateImage(photo);
+    updateImage(imageProcessed);
     router.replace("/questions");
   };
   return (
