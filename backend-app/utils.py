@@ -1,6 +1,7 @@
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import os
 
 questions = {
     "questions": [
@@ -82,6 +83,7 @@ model_details = {"resolution": {
     "height": 256,
 }}
 
+
 def create_model():
     base_model = tf.keras.applications.VGG16(
         include_top=False,
@@ -95,7 +97,6 @@ def create_model():
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.Dense(256, activation='relu'),
     ])
-
 
     model_img = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(None, None, 3)),
@@ -116,8 +117,15 @@ def create_model():
     merged = tf.keras.layers.Concatenate()([img_side, txt_side])
     merged = tf.keras.layers.Dense(128, activation='gelu')(merged)
     merged = tf.keras.layers.Dense(7, activation='softmax')(merged)
+    
+    model = tf.keras.Model(inputs=[img_input, txt_input], outputs=merged)
 
-    return tf.keras.Model(inputs=[img_input, txt_input], outputs=merged)
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+        loss="categorical_crossentropy",
+        metrics=['accuracy'])
+    return model
+
 
 def validate_answer(param_name, param_value):
     for question in questions["questions"]:
@@ -127,6 +135,7 @@ def validate_answer(param_name, param_value):
                     return True
     return False
 
+
 def load_image(file):
     img = Image.open(file)
     img = np.array(img)
@@ -134,12 +143,12 @@ def load_image(file):
     img = tf.expand_dims(img, axis=0)
     return img
 
+
 def model_predict(img, txt):
-    model = create_model()
-
+    #model = create_model()
     # Load the previously saved weights
-    model.load_weights('./models/multimodal-base.keras')
-
+    #f = open('E:/BWSI/final-project/backend-app/models/test-model.keras', 'rb')
+    model = tf.keras.models.load_model('./models/multimodal-base.keras')
+    
     prediction = model.predict([img, txt])
-
-    return prediction
+    return list(prediction[0])

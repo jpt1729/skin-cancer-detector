@@ -46,7 +46,7 @@ def upload():
     prediction = model_predict(img, txt)
     print(prediction)
     # Returns an array of seven probabilities
-    return {"probability": max(prediction)}, 200
+    return {"probability": float(max(prediction))}, 200
 
 
 @app.route('/model-details', methods=['GET'])
