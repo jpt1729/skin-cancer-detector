@@ -7,8 +7,8 @@ import tensorflow as tf
 from utils import *
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = "uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -16,27 +16,30 @@ if not os.path.exists(UPLOAD_FOLDER):
 # Positive responses should be in the form { probability: 0.1 }, 200
 # Errors should be in the form {error: "error message here"}, 400
 
-@app.route('/upload', methods=['PATCH'])
+
+@app.route("/upload", methods=["PATCH"])
 def upload():
-    if 'photo' not in request.files:
-        return {"error": 'No file part'}, 400
+    if "photo" not in request.files:
+        return {"error": "No file part"}, 400
 
-    file = request.files['photo']
+    file = request.files["photo"]
 
-    if file.filename == '':
-        return {"error": 'No selected file'}, 400
+    if file.filename == "":
+        return {"error": "No selected file"}, 400
 
     if not file:
         return {"error": "File does not exist"}, 400
 
-    localization = int(request.args.get('localizations'))
-    age = int(request.args.get('age'))
-    sex = int(request.args.get('sex'))
+    localization = int(request.args.get("localizations"))
+    age = int(request.args.get("age"))
+    sex = int(request.args.get("sex"))
 
-    if not (validate_answer('localizations', localization) and
-            validate_answer('age', age) and
-            validate_answer('sex', sex)):
-        return {"error": 'Invalid answers'}, 400
+    if not (
+        validate_answer("localizations", localization)
+        and validate_answer("age", age)
+        and validate_answer("sex", sex)
+    ):
+        return {"error": "Invalid answers"}, 400
 
     img = load_image(file)
 
@@ -44,20 +47,20 @@ def upload():
     txt = tf.expand_dims(txt, axis=0)
     # Create a new model instance
     prediction = model_predict(img, txt)
-    print(prediction)
+    print(float(max(prediction)))
     # Returns an array of seven probabilities
-    return {"probability": max(prediction)}, 200
+    return {"probability": float(max(prediction))}, 200
 
 
-@app.route('/model-details', methods=['GET'])
+@app.route("/model-details", methods=["GET"])
 def get_model_details():
     return jsonify(model_details), 200
 
 
-@app.route('/questions', methods=['GET'])
+@app.route("/questions", methods=["GET"])
 def get_questions():
     return jsonify(questions), 200
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=3000)
