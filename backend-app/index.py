@@ -47,9 +47,9 @@ def upload():
     txt = tf.expand_dims(txt, axis=0)
     # Create a new model instance
     prediction = model_predict(img, txt)
-    print(float(max(prediction)))
+    prediction_i = np.argmax(prediction)
     # Returns an array of seven probabilities
-    return {"probability": float(max(prediction))}, 200
+    return {"probability": float(max(prediction)), "type": skin_cancer_types[int(prediction_i)] }, 200
 
 
 @app.route("/model-details", methods=["GET"])

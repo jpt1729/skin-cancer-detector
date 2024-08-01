@@ -6,25 +6,28 @@ type DiagnosisMessageProps = {
 };
 
 const getPercentage = (number: number) => {
-    const multiplied = number * 100;
-    const rounded = multiplied.toFixed(1);
-    return parseFloat(rounded);
-  };
+  const multiplied = number * 100;
+  const rounded = multiplied.toFixed(1);
+  return parseFloat(rounded);
+};
 
 export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
-  if (result.status !== 200) {
+  if (result.status === 500) {
     return (
-      <ThemedText
-        type="subtitle"
-        style={{
-          fontWeight: "medium",
-          fontSize: 24,
-          color: "white",
-          lineHeight: 29,
-        }}
-      >
-        {result.error}
-      </ThemedText>
+      <>
+        <ThemedText
+          type="subtitle"
+          style={{
+            fontWeight: "medium",
+            fontSize: 24,
+            color: "white",
+            lineHeight: 29,
+          }}
+        >
+          There seems to have been an error on our end
+        </ThemedText>
+        <ThemedText style={{ color: "#FFFFFF" }}>Try again, but the error my persist on and on!</ThemedText>
+      </>
     );
   }
   let jsonObject;
@@ -49,6 +52,25 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
       </>
     );
   }
+  if (result.status !== 200) {
+    return (
+      <>
+        <ThemedText
+          type="subtitle"
+          style={{
+            fontWeight: "medium",
+            fontSize: 24,
+            color: "white",
+            lineHeight: 29,
+          }}
+        >
+          There seems to have been an error:{" "}
+          <ThemedText type="highlight">{jsonObject.error}</ThemedText>
+        </ThemedText>
+        <ThemedText style={{ color: "#FFFFFF" }}>Try again!</ThemedText>
+      </>
+    );
+  }
   const probability = jsonObject.probability;
   if (probability >= 0.0 && probability <= 0.35) {
     return (
@@ -65,8 +87,10 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
           From this photo, you likely{" "}
           <ThemedText type="highlight">do not have</ThemedText> skin cancer.
         </ThemedText>
-        <ThemedText style={{color:'#FFFFFF'}}>
-            Our model believes you have a {`${getPercentage(probability)}%`} chance of skin cancer. If you continue to feel skin cancer symptoms, please see a doctor.
+        <ThemedText style={{ color: "#FFFFFF" }}>
+          Our model believes you have a {`${getPercentage(probability)}%`}{" "} 
+          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          please see a doctor.
         </ThemedText>
       </>
     );
@@ -85,8 +109,10 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
           From this photo, you{" "}
           <ThemedText type="highlight">might have</ThemedText> skin cancer.
         </ThemedText>
-        <ThemedText style={{color:'#FFFFFF'}}>
-            Our model believes you have a {`${getPercentage(probability)}%`} chance of skin cancer. If you continue to feel skin cancer symptoms, please see a doctor.
+        <ThemedText style={{ color: "#FFFFFF" }}>
+          Our model believes you have a {`${getPercentage(probability)}%`}{" "}
+          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          please see a doctor.
         </ThemedText>
       </>
     );
@@ -105,8 +131,10 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
           From this photo, you{" "}
           <ThemedText type="highlight">likely have</ThemedText> skin cancer.
         </ThemedText>
-        <ThemedText style={{color:'#FFFFFF'}}>
-            Our model believes you have a {`${getPercentage(probability)}%`} chance of skin cancer. If you continue to feel skin cancer symptoms, please see a doctor.
+        <ThemedText style={{ color: "#FFFFFF" }}>
+          Our model believes you have a {`${getPercentage(probability)}%`}{" "}
+          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          please see a doctor.
         </ThemedText>
       </>
     );
@@ -125,7 +153,6 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
           Right now, our model is speaking gibberish. We couldn't understand the
           response
         </ThemedText>
-        
       </>
     );
   }

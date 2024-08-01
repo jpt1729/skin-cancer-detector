@@ -41,10 +41,9 @@ export default function AnalyzeScreen() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const res = await uploadImage(image.uri, answers, imageDetails);
-			console.log("RES IS AS FOLLOWS");
-			console.log(res);
 			await new Promise((resolve) => setTimeout(resolve, 3500));
 			setResult(res);
+			
 		};
 		fetchData();
 		return () => {};

@@ -42,6 +42,7 @@ model_details = {
     }
 }
 
+skin_cancer_types = ['actinic keratosis', 'basal cell carcinoma', 'melanoma', 'nevus', 'seborrheic keratosis', 'solar lentigo', 'squamous cell carcinoma']
 
 def validate_answer(param_name, param_value):
     for question in questions["questions"]:
@@ -63,7 +64,5 @@ def load_image(file):
 def model_predict(img, txt):
     model = tf.keras.models.load_model("./models/multimodal-base.keras")
     prediction = model.predict([img, txt])
-    print("PREDICTED")
     prediction = prediction[0]
-    print(prediction)
     return prediction
