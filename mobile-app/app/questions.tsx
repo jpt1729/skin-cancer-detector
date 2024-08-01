@@ -102,7 +102,7 @@ export default function QuestionsScreen() {
                   // final question code here
                 }}
                 disabled={
-                  !answers[questions["questions"][currentQuestion]["name"]]
+                  !(answers[questions["questions"][currentQuestion]["name"]] || answers[questions["questions"][currentQuestion]["name"]] === 0) // Janky way to get around 0 becoming a disabled value
                 }
               />
             )}
@@ -113,7 +113,7 @@ export default function QuestionsScreen() {
                   router.replace("/analyze");
                 }}
                 disabled={
-                  !answers[questions["questions"][currentQuestion]["name"]]
+                  !(answers[questions["questions"][currentQuestion]["name"]] || answers[questions["questions"][currentQuestion]["name"]] === 0) // Janky way to get around 0 becoming a disabled value
                 }
               />
             )}
