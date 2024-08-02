@@ -45,9 +45,8 @@ model_details = {
 #skin_cancer_types = ['actinic keratosis', 'basal cell carcinoma', 'melanoma', 'nevus', 'seborrheic keratosis', 'solar lentigo', 'squamous cell carcinoma']
 skin_cancer_types = ["Actinic keratoses", "Basal cell carcinoma", "Benign keratosis-like lesions", "Dermatofibroma", "Melanoma", "Melanocytic nevi", "Vascular lesions"]
 skin_cancer_types.pop(2)
+skin_cancer_types.pop(2)
 skin_cancer_types.pop(3)
-skin_cancer_types.pop(5)
-
 def validate_answer(param_name, param_value):
     for question in questions["questions"]:
         if question["name"] == param_name:
@@ -70,6 +69,6 @@ def model_predict(img, txt):
     prediction = model.predict(img)
     prediction = prediction[0]
     prediction.pop(2)
+    prediction.pop(2)
     prediction.pop(3)
-    prediction.pop(5)
     return prediction
