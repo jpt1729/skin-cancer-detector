@@ -37,8 +37,8 @@ questions = {
 
 model_details = {
     "resolution": {
-        "width": 299,
-        "height": 299,
+        "width": 256,
+        "height": 256,
     }
 }
 
