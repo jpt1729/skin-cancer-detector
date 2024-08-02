@@ -49,7 +49,7 @@ def upload():
     prediction = model_predict(img, txt)
     prediction_i = np.argmax(prediction)
     # Returns an array of seven probabilities
-    return {"probability": float(max(prediction)), "type": skin_cancer_types[int(prediction_i)] }, 200
+    return {"probability": 1 - float(max(prediction)), "type": skin_cancer_types[int(prediction_i)] }, 200
 
 
 @app.route("/model-details", methods=["GET"])

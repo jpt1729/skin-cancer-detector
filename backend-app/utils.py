@@ -64,5 +64,5 @@ def load_image(file):
 def model_predict(img, txt):
     model = tf.keras.models.load_model("./models/multimodal-base.keras")
     prediction = model.predict([img, txt])
-    prediction = 1 - prediction[0]
+    prediction = prediction[0]
     return prediction
