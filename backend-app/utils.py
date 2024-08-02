@@ -67,7 +67,7 @@ def load_image(file):
 def model_predict(img, txt):
     model = tf.keras.models.load_model("./models/new-model.keras")
     prediction = model.predict(img)
-    prediction = prediction[0]
+    prediction = list(prediction[0])
     prediction.pop(2)
     prediction.pop(2)
     prediction.pop(3)
