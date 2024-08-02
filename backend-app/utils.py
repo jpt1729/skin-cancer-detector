@@ -42,7 +42,7 @@ model_details = {
     }
 }
 
-skin_cancer_types = ['actinic keratosis', 'basal cell carcinoma', 'melanoma', 'nevus', 'seborrheic keratosis', 'solar lentigo', 'squamous cell carcinoma']
+#skin_cancer_types = ['actinic keratosis', 'basal cell carcinoma', 'melanoma', 'nevus', 'seborrheic keratosis', 'solar lentigo', 'squamous cell carcinoma']
 skin_cancer_types = ["Actinic keratoses", "Basal cell carcinoma", "Benign keratosis-like lesions", "Dermatofibroma", "Melanoma", "Melanocytic nevi", "Vascular lesions"]
 skin_cancer_types.pop(2)
 skin_cancer_types.pop(3)
