@@ -1,4 +1,3 @@
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { ThemedText } from "./ThemedText";
 
 type DiagnosisMessageProps = {
@@ -89,7 +88,7 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
         </ThemedText>
         <ThemedText style={{ color: "#FFFFFF" }}>
           Our model believes you have a {`${getPercentage(probability)}%`}{" "} 
-          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          chance of skin cancer{jsonObject["type"] && `, specifically ${jsonObject["type"]}`}. If you continue to feel skin cancer symptoms,
           please see a doctor.
         </ThemedText>
       </>
@@ -111,7 +110,7 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
         </ThemedText>
         <ThemedText style={{ color: "#FFFFFF" }}>
           Our model believes you have a {`${getPercentage(probability)}%`}{" "}
-          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          chance of skin cancer{jsonObject["type"] && `, specifically ${jsonObject["type"]}`}. If you continue to feel skin cancer symptoms,
           please see a doctor.
         </ThemedText>
       </>
@@ -133,7 +132,7 @@ export default function DiagnosisMessage({ result }: DiagnosisMessageProps) {
         </ThemedText>
         <ThemedText style={{ color: "#FFFFFF" }}>
           Our model believes you have a {`${getPercentage(probability)}%`}{" "}
-          chance of skin cancer, specifically {jsonObject["type"]}. If you continue to feel skin cancer symptoms,
+          chance of skin cancer{jsonObject["type"] && `, specifically ${jsonObject["type"]}`}. If you continue to feel skin cancer symptoms,
           please see a doctor.
         </ThemedText>
       </>
