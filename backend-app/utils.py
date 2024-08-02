@@ -37,8 +37,8 @@ questions = {
 
 model_details = {
     "resolution": {
-        "width": 256,
-        "height": 256,
+        "width": 299,
+        "height": 299,
     }
 }
 
@@ -62,7 +62,7 @@ def load_image(file):
 
 
 def model_predict(img, txt):
-    model = tf.keras.models.load_model("./models/multimodal-base.keras")
-    prediction = model.predict([img, txt])
+    model = tf.keras.models.load_model("./models/new-model.keras")
+    prediction = model.predict(img)
     prediction = prediction[0]
     return prediction
