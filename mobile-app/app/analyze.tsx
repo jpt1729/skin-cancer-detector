@@ -41,7 +41,7 @@ export default function AnalyzeScreen() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const res = await uploadImage(image.uri, answers, imageDetails);
-			//await new Promise((resolve) => setTimeout(resolve, 2500));
+			await new Promise((resolve) => setTimeout(resolve, 2500));
 			setResult(res);
 			
 		};
@@ -141,12 +141,6 @@ export default function AnalyzeScreen() {
 							}}
 						/>
 					)}
-					<CloseButton
-							onPress={ () => {
-								console.log('running')
-								uploadImage(image.uri, answers, imageDetails);
-							}}
-						/>
 				</View>
 			</View>
 		</View>
