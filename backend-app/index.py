@@ -18,7 +18,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 
 @app.route("/upload", methods=["PATCH"])
-def upload():
+async def upload():
     if "photo" not in request.files:
         return {"error": "No file part"}, 400
 
@@ -67,4 +67,4 @@ def get_questions():
 
 
 if __name__ == "__main__":
-    app.run(port=3000, threaded = True)
+    app.run(port=5000, threaded = True, debug=True)
