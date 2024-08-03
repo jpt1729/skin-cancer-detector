@@ -100,7 +100,8 @@ export const QuestionsProvider = ({ children }: QuestionsProviderProps) => {
         setQuestions(data);
         setQuestionsReady(true)
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        setQuestions({});
+        setQuestionsReady(false)
       }
     };
 

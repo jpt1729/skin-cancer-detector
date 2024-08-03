@@ -29,7 +29,11 @@ def upload():
 
     if not file:
         return {"error": "File does not exist"}, 400
-
+    
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+    
     localization = int(request.args.get("localizations"))
     age = int(request.args.get("age"))
     sex = int(request.args.get("sex"))
@@ -63,4 +67,4 @@ def get_questions():
 
 
 if __name__ == "__main__":
-    app.run(port=3000)
+    app.run(port=3000, threaded = True)

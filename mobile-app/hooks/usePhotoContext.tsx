@@ -45,7 +45,11 @@ export const ImageProvider = ({ children }: ImageProviderProps) => {
       setImageDetails(updatedImageDetails)
       setImageReady(true)
     };
-    getFinalResolution();
+    try {
+      getFinalResolution();
+    } catch (error) {
+      setImageReady(false)
+    }
   }, [setImageReady]);
   return (
     <ImageContext.Provider value={{ image, updateImage, imageReady, imageDetails }}>

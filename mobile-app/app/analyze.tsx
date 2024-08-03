@@ -141,6 +141,12 @@ export default function AnalyzeScreen() {
 							}}
 						/>
 					)}
+					<CloseButton
+							onPress={ () => {
+								console.log('running')
+								uploadImage(image.uri, answers, imageDetails);
+							}}
+						/>
 				</View>
 			</View>
 		</View>

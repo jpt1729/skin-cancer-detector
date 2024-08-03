@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from "react-native";
 
 import SelectIcon from "./icons/SelectIcon";
 import SelectedIcon from "./icons/SelectedIcon";

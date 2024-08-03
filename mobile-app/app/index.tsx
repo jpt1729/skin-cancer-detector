@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   Button,
+  ScrollView
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
