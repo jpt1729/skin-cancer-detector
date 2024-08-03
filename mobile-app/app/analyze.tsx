@@ -133,6 +133,7 @@ export default function AnalyzeScreen() {
 							/>
 						</View>
 					)}
+					{!result && <ThemedText type='subtext'>Model running</ThemedText>}
 					{result && (
 						<CloseButton
 							onPress={async () => {
