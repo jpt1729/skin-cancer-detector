@@ -92,7 +92,7 @@ export const RagProvider = ({ children }: QuestionsProviderProps) => {
       creator: "rag",
       message: json["message"].replace(/(\r\n|\n|\r)/gm, "")
     });
-    
+    setConversationHistory(updatedConversation)
     setRagLoading(false)
     return;
   };
