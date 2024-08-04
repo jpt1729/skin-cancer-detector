@@ -81,7 +81,7 @@ export const RagProvider = ({ children }: QuestionsProviderProps) => {
       return;
     }
     setConversationHistory(updatedConversation);
-    setRagLoading(false)
+    setRagLoading(true)
     const res = await fetch(
       `http://73.189.37.210:48010/query?text=${trueMessage}`
     );
