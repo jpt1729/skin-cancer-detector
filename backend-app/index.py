@@ -18,7 +18,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 
 @app.route("/upload", methods=["PATCH"])
-async def upload():
+def upload():
     if "photo" not in request.files:
         return {"error": "No file part"}, 400
 
