@@ -27,7 +27,7 @@ import nest_asyncio
 #################################################################
 
 from huggingface_hub import login
-login(token='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')
+login(token='')
 
 model_name='mistralai/Mistral-7B-Instruct-v0.1'
 
