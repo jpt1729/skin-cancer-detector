@@ -64,7 +64,8 @@ def get_model_details():
 @app.route("/questions", methods=["GET"])
 def get_questions():
     return jsonify(questions), 200
-@app.rout("/rag-enabled", methods=["GET"])
+
+@app.route("/rag-enabled", methods=["GET"])
 def rag_status():
     return {}, 200
 
