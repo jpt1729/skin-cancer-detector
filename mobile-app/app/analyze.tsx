@@ -1,7 +1,13 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 
-import { StyleSheet, View, Dimensions, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Dimensions,
+  Image,
+} from "react-native";
 import { MotiView } from "moti";
 import { ThemedText } from "@/components/ThemedText";
 
@@ -50,7 +56,7 @@ export default function AnalyzeScreen() {
 
   // TODO: Error handling
   return (
-    <View style={[styles.viewContainer, { height: dynamicHeight }]}>
+    <KeyboardAvoidingView style={[styles.viewContainer]} behavior="position">
       <View>
         <View>
           <ThemedText type="title">
@@ -134,7 +140,16 @@ export default function AnalyzeScreen() {
           )}
           {!result && <ThemedText type="subtext">Model running</ThemedText>}
           {result && (
-            <View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "between",
+                alignItems: "center",
+                gap:12,
+              }}
+            >
               <CloseButton
                 onPress={async () => {
                   setAnswers({});
@@ -146,7 +161,7 @@ export default function AnalyzeScreen() {
           )}
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -173,6 +188,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 24,
+    paddingBottom: 24,
   },
   dividerBar: {
     marginVertical: 9,
@@ -180,12 +196,6 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     width: 120,
     height: 5,
-  },
-  bottom: {
-    display: "flex",
-    gap: 12,
-    justifyContent: "center",
-    alignItems: "center",
   },
   cameraBox: {
     aspectRatio: "1",
@@ -199,5 +209,10 @@ const styles = StyleSheet.create({
     gap: 12,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 48,
+  },
+  bottomBar: {
+    display: "flex",
+    flexDirection: "row",
   },
 });
