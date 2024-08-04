@@ -49,7 +49,7 @@ export const RagProvider = ({ children }: QuestionsProviderProps) => {
   const [conversationHistory, setConversationHistory] = useState<MessageType[]>(
     []
   );
-  const [ragEnabled, setRagEnabled] = useState(true);
+  const [ragEnabled, setRagEnabled] = useState(false);
 
   const [ragLoading, setRagLoading] = useState(false);
   const { results } = useImage();
