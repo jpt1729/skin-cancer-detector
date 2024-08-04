@@ -15,6 +15,8 @@ import { router } from "expo-router";
 import { useFact } from "@/hooks/useFact";
 import { useQuestions } from "@/hooks/useQuestionsContext";
 import { useImage } from "@/hooks/usePhotoContext";
+import { useRag } from "@/hooks/useRagContext";
+
 import CloseButton from "@/components/buttons/CloseButton";
 import SendMessage from "@/components/SendMessage";
 import { uploadImage, imagePreprocessing } from "@/scripts/file-upload";
@@ -43,7 +45,7 @@ export default function AnalyzeScreen() {
   const { answers, setAnswers } = useQuestions();
   const { image, updateImage, imageDetails } = useImage();
   const [currentUri, setCurrentUri] = useState(image.uri);
-
+  const { ragEnabled } = useRag()
   useEffect(() => {
     const fetchData = async () => {
       const res = await uploadImage(image.uri, answers, imageDetails);
@@ -73,10 +75,10 @@ export default function AnalyzeScreen() {
       <View>
         <View style={styles.middle}>
           <View style={{ position: "relative" }}>
-            <Image
-              source={{ uri: image && image.uri }}
+           {image && <Image
+              source={{ uri: image.uri }}
               style={styles.cameraBox}
-            />
+            />}
             {result && (
               <View
                 style={{
@@ -156,7 +158,7 @@ export default function AnalyzeScreen() {
                   router.replace("/");
                 }}
               />
-              <SendMessage />
+              {ragEnabled && <SendMessage />}
             </View>
           )}
         </View>

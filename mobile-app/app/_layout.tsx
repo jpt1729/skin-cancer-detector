@@ -15,6 +15,7 @@ import "react-native-gesture-handler";
 import { ImageProvider } from "@/hooks/usePhotoContext";
 import { QuestionsProvider } from "@/hooks/useQuestionsContext";
 import { FactProvider } from "@/hooks/useFact";
+import { RagProvider } from "@/hooks/useRagContext";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -43,20 +44,34 @@ export default function RootLayout() {
   }
 
   return (
-    <FactProvider>
-      <QuestionsProvider>
-        <ImageProvider>
-          <ThemeProvider value={DefaultTheme}>
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false, animation: 'none' }} />
-              <Stack.Screen name="camera" options={{ headerShown: false, animation: 'none' }} />
-              <Stack.Screen name="questions" options={{ headerShown: false }} />
-              <Stack.Screen name="analyze" options={{ headerShown: false, animation: 'none' }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </ThemeProvider>
-        </ImageProvider>
-      </QuestionsProvider>
-    </FactProvider>
+    <RagProvider>
+      <FactProvider>
+        <QuestionsProvider>
+          <ImageProvider>
+            <ThemeProvider value={DefaultTheme}>
+              <Stack>
+                <Stack.Screen
+                  name="index"
+                  options={{ headerShown: false, animation: "none" }}
+                />
+                <Stack.Screen
+                  name="camera"
+                  options={{ headerShown: false, animation: "none" }}
+                />
+                <Stack.Screen
+                  name="questions"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="analyze"
+                  options={{ headerShown: false, animation: "none" }}
+                />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </ThemeProvider>
+          </ImageProvider>
+        </QuestionsProvider>
+      </FactProvider>
+    </RagProvider>
   );
 }
