@@ -1,10 +1,17 @@
 import { useState } from "react";
 
-import { SafeAreaView, StyleSheet, TextInput } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import SendIcon from "./icons/SendIcon";
+import { useRag } from "@/hooks/useRagContext";
 
-export default function SendMessage({}) {
+export default function SendMessage({location}: {location: string}) {
   const [text, setText] = useState("");
+  const { sendMessage } = useRag();
   return (
     <SafeAreaView style={styles.inputBox}>
       <TextInput
@@ -13,7 +20,13 @@ export default function SendMessage({}) {
         value={text}
         placeholder="Ask a question..."
       />
-      <SendIcon />
+      <TouchableOpacity
+        onPress={() => {
+          sendMessage(text, location);
+        }}
+      >
+        <SendIcon />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -28,11 +41,11 @@ const styles = StyleSheet.create({
     borderColor: "#084887",
     display: "flex",
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   input: {
-    flexGrow:1,
+    flexGrow: 1,
   },
 });

@@ -66,6 +66,10 @@ export default function RootLayout() {
                   name="analyze"
                   options={{ headerShown: false, animation: "none" }}
                 />
+                <Stack.Screen
+                  name="chat"
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen name="+not-found" />
               </Stack>
             </ThemeProvider>

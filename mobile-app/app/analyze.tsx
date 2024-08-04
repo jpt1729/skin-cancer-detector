@@ -158,7 +158,7 @@ export default function AnalyzeScreen() {
                   router.replace("/");
                 }}
               />
-              {ragEnabled && <SendMessage />}
+              {ragEnabled && <SendMessage location='/analyze' />}
             </View>
           )}
         </View>
