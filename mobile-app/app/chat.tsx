@@ -8,6 +8,7 @@ import {
   Button,
   ScrollView,
   FlatList,
+  KeyboardAvoidingView
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -17,7 +18,8 @@ import CameraButton from "@/components/buttons/CameraButton";
 import { useFact } from "@/hooks/useFact";
 import { useImage } from "@/hooks/usePhotoContext";
 import { useQuestions } from "@/hooks/useQuestionsContext";
-import BackButton from "@/components/buttons/BackButton";
+//import BackButton from "@/components/buttons/BackButton";
+import CloseButton from "@/components/buttons/CloseButton";
 import SendMessage from "@/components/SendMessage";
 
 import { useRag, MessageType } from "@/hooks/useRagContext";
@@ -80,11 +82,11 @@ export default function ChatScreen() {
     router.replace("/");
   }
   return (
-    <View style={[styles.viewContainer, { height: dynamicHeight }]}>
+    <KeyboardAvoidingView style={[styles.viewContainer, {paddingBottom: 24}]} behavior="position">
       <View>
         <View>
           <ThemedText type="title">
-           <ThemedText type='highlight'>Learn</ThemedText> More
+          Learn <ThemedText type='highlight'>More</ThemedText> 
           </ThemedText>
           <View style={styles.dividerBar} />
         </View>
@@ -94,6 +96,7 @@ export default function ChatScreen() {
           data={conversationHistory}
           renderItem={Message}
           keyExtractor={(item) => item.id}
+          style={{maxHeight: "80%"}}
         />
         <View
           style={{
@@ -105,15 +108,15 @@ export default function ChatScreen() {
             gap: 12,
           }}
         >
-          <BackButton
+          <CloseButton
             onPress={() => {
-              router.replace("/analyze");
+              router.replace("/");
             }}
           />
           <SendMessage location="/chat" />
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

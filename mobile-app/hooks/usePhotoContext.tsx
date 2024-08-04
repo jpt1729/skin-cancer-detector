@@ -15,6 +15,8 @@ type ImageContextType = {
   updateImage: (image: CameraCapturedPicture) => void;
   imageReady: boolean;
   imageDetails: any;
+  results: any;
+  setResults: any;
 };
 
 // Create the context with a default value
@@ -33,6 +35,9 @@ export const ImageProvider = ({ children }: ImageProviderProps) => {
       height: 256,
     },
   });
+  const [results, setResults] = useState({
+
+  })
   const updateImage = (image: CameraCapturedPicture) => {
     setImage(image);
   };
@@ -52,7 +57,7 @@ export const ImageProvider = ({ children }: ImageProviderProps) => {
     }
   }, [setImageReady]);
   return (
-    <ImageContext.Provider value={{ image, updateImage, imageReady, imageDetails }}>
+    <ImageContext.Provider value={{ image, updateImage, imageReady, imageDetails, results, setResults }}>
       {children}
     </ImageContext.Provider>
   );

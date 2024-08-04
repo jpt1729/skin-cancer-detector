@@ -50,7 +50,7 @@ export default function QuestionsScreen() {
       <View>
         <View>
           <ThemedText type="title">
-            Good <ThemedText type="highlight">{greeting}</ThemedText>
+            <ThemedText type="highlight">Questions</ThemedText>
           </ThemedText>
           <View style={styles.dividerBar} />
         </View>
@@ -62,9 +62,6 @@ export default function QuestionsScreen() {
       </View>
       <View>
         <View style={styles.questions}>
-          <ThemedText type="defaultSemiBold">
-            <ThemedText type="highlight">Questions</ThemedText>
-          </ThemedText>
           <AnimatePresence>
             <MultiChoice
               title={questions["questions"][currentQuestion].title}

@@ -43,18 +43,20 @@ export default function AnalyzeScreen() {
   }
 
   const { answers, setAnswers } = useQuestions();
-  const { image, updateImage, imageDetails } = useImage();
+  const { image, updateImage, imageDetails, setResults } = useImage();
   const [currentUri, setCurrentUri] = useState(image.uri);
-  const { ragEnabled } = useRag()
+  const { ragEnabled, setConversationHistory } = useRag()
   useEffect(() => {
+    setConversationHistory([])
     const fetchData = async () => {
       const res = await uploadImage(image.uri, answers, imageDetails);
       await new Promise((resolve) => setTimeout(resolve, 2500));
       setResult(res);
+      setResults(res)
     };
     fetchData();
     return () => {};
-  }, [width, height, uploadImage, setResult]);
+  }, [width, height, uploadImage, setResult, setConversationHistory]);
 
   // TODO: Error handling
   return (
@@ -62,7 +64,7 @@ export default function AnalyzeScreen() {
       <View>
         <View>
           <ThemedText type="title">
-            Good <ThemedText type="highlight">{greeting}</ThemedText>
+            <ThemedText type="highlight">Results</ThemedText>
           </ThemedText>
           <View style={styles.dividerBar} />
         </View>

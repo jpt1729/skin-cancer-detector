@@ -44,10 +44,10 @@ export default function RootLayout() {
   }
 
   return (
-    <RagProvider>
-      <FactProvider>
-        <QuestionsProvider>
-          <ImageProvider>
+    <FactProvider>
+      <QuestionsProvider>
+        <ImageProvider>
+          <RagProvider>
             <ThemeProvider value={DefaultTheme}>
               <Stack>
                 <Stack.Screen
@@ -66,16 +66,13 @@ export default function RootLayout() {
                   name="analyze"
                   options={{ headerShown: false, animation: "none" }}
                 />
-                <Stack.Screen
-                  name="chat"
-                  options={{ headerShown: false }}
-                />
+                <Stack.Screen name="chat" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
             </ThemeProvider>
-          </ImageProvider>
-        </QuestionsProvider>
-      </FactProvider>
-    </RagProvider>
+          </RagProvider>
+        </ImageProvider>
+      </QuestionsProvider>
+    </FactProvider>
   );
 }

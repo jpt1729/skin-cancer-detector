@@ -9,23 +9,33 @@ import {
 import SendIcon from "./icons/SendIcon";
 import { useRag } from "@/hooks/useRagContext";
 
-export default function SendMessage({location}: {location: string}) {
+
+export default function SendMessage({ location }: { location: string }) {
   const [text, setText] = useState("");
-  const { sendMessage } = useRag();
+  const { sendMessage, ragLoading, setRagLoading, conversationHistory } = useRag();
+
   return (
     <SafeAreaView style={styles.inputBox}>
       <TextInput
         style={styles.input}
         onChangeText={setText}
         value={text}
-        placeholder="Ask a question..."
+        placeholder={ragLoading ? "Loading..." : "Ask a question..."}
+        editable={!(ragLoading || conversationHistory.length > 6)}
       />
       <TouchableOpacity
         onPress={() => {
+            if (text === ''){
+                return;
+            }
+            if (ragLoading){
+                return;
+            }
           sendMessage(text, location);
+          setText('')
         }}
       >
-        <SendIcon />
+        <SendIcon fill = {ragLoading ? '#a6a4a8' : '#084887'}/>
       </TouchableOpacity>
     </SafeAreaView>
   );
